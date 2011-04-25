@@ -43,10 +43,10 @@
 	<tr><th>LuaJIT-2.0.0-beta6 (JIT)    <td>Lua       <td>2.31  <td>32.2 </tr>
 	<tr><th>LuaJIT-2.0.0-beta6 (JIT-off)<td>Lua       <td>20.41 <td>33.0 </tr>
 	<tr><th>Lua-5.1.4                   <td>Lua       <td>68.34 <td>65.4 </tr>
-	<tr><th>PyPy-1.4.1                  <td>Python    <td>40.60 <td>98.4 </tr>
-	<tr><th>CPython-2.7.1               <td>Python    <td>192.15<td>91.3 </tr>
-	<tr><th>CPython-3.2                 <td>Python    <td>187.55<td>118.9</tr>
-	<tr><th>IronPython-2.7@Mono-2.10.1  <td>Python    <td>230.86<td>289.4</tr>
+	<tr><th>PyPy-1.4.1                  <td>Python    <td>8.47  <td>84.1 </tr>
+	<tr><th>CPython-3.2                 <td>Python    <td>121.92<td>93.2 </tr>
+	<tr><th>CPython-2.7.1               <td>Python    <td>153.90<td>91.3 </tr>
+	<tr><th>IronPython-2.7@Mono-2.10.1  <td>Python    <td>202.67<td>190.2</tr>
 	<tr><th>Jython-2.5.2                <td>Python    <td>706.76<td>493.0</tr>
 	<tr><th>Perl-5.12.2                 <td>Perl      <td>230.34<td>225.6</tr>
 	<tr><th>JRuby-1.6.1                 <td>Ruby      <td>330.25<td>433.8</tr>
@@ -64,8 +64,9 @@
 2) Due a technical complication, Java programs are compiled on Mac using 1.6.0_24 and run on Linux with 1.6.0_14.<br>
 3) Mono-sgen is used for implementations requiring the .NET framework. Mono-sgen is usually faster but costs more memory than mono.<br>
 <tr><th>matmul<td>
-1) The built-in "Matrix" class in Ruby does not transpose the second matrix before multiplication. Using the built-in class is twice as slow.<br>
-2) Testing R in this benchmark is actually unfair to other scripting languages.
+1) LuaJIT-jit, PyPy, CPython2/3 and IronPython use "matmul_v2.*" and the rest use "matmul_v1.*" in the source code directory.
+2) The built-in "Matrix" class in Ruby does not transpose the second matrix before multiplication. Using the built-in class is twice as slow.<br>
+3) Testing R in this benchmark is actually unfair to other scripting languages.
 </tr>
 </table>
 </div>
