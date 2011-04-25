@@ -1,2 +1,7 @@
 These programs perform naive matrix multiplication with O(n^3) time complexity.
 Strassen's algorithm and Coppersmith-Winograd algorithm are faster in theory.
+
+v1: ICC, GCC, Clang, C#@Mono, GDC, 6g, Java, V8, JaegerMonkey, Rhino, Perl, R
+	LuaJIT-joff, R, Rubinius, IronRuby, JRuby, Ruby
+
+V2: LuaJIT-jon, CPython2/3, PyPy, IronPython, Jython
