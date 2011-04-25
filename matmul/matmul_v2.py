@@ -11,8 +11,9 @@ def matmul(a, b): # FIXME: no error checking
 	d = [array.array('d', [0 for j in rb0]) for i in ra] # transpose
 	for i in ra:
 		for j in rb0:
-			ai, cj = a[i], c[j]
-			d[i][j] = sum(ai[k] * cj[k] for k in rb)
+			s, ai, cj = 0, a[i], c[j]
+			for k in rb: s += ai[k] * cj[k]
+			d[i][j] = s
 	return d
 
 def main():
