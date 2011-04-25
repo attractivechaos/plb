@@ -1,0 +1,2 @@
+These programs perform naive matrix multiplication with O(n^3) time complexity.
+Strassen's algorithm and Coppersmith-Winograd algorithm are faster in theory.
