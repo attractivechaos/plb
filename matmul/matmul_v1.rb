@@ -19,8 +19,9 @@ def matmul(a, b)
 	for i in 0 .. m-1
 		for j in 0 .. p-1
 			s = 0
+			ai, b2j = a[i], b2[j]
 			for k in 0 .. n-1
-				s += a[i][k] * b2[j][k]
+				s += ai[k] * b2j[k]
 			end
 			c[i][j] = s
 		end

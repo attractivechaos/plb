@@ -20,6 +20,7 @@ function matrix.mul(a, b)
 		local xi = x[i];
 		for j = 1, p do
 			local sum, ai, cj = 0, a[i], c[j];
+			-- for luajit, caching c[j] or not makes no difference; lua is not so clever
 			for k = 1, n do sum = sum + ai[k] * cj[k] end
 			xi[j] = sum;
 		end
