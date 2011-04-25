@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Programming Languages Benchmarks</title>
+<link rel="stylesheet" href="sortable.css" />
+<script type="text/javascript" src="sortable.js"></script>
+</head>
+<body>
+<div id="wrapper">
+<h1>Overview</h1><br>
+<table cellpadding="0" cellspacing="0" border="0" class="sortable">
+<tr></tr>
+<tr><th>Philosophy<td>1) Benchmark language implementations, not individual programs (simple tasks with few pitfalls).<br>
+2) Benchmark one language a time, not a mixture of languages (no libraries in foreign languages especially in C).<br>
+</tr>
+<tr><th>CPU<td>Intel(R) Xeon(R) CPU  E5440  @ 2.83GHz</tr>
+<tr><th>Memory<td>16GB</tr>
+<tr><th>OS<td>Debian GNU/Linux 5.0</tr>
+<tr><th>Source code<td><a class="link" href="https://github.com/attractivechaos/langbench">https://github.com/attractivechaos/langbench</a></tr>
+</table>
+<br>
+<h1>Benchmarks</h1><br>
+<table cellpadding="0" cellspacing="0" border="0" class="sortable">
+<tr></tr>
+<tr><th>matmul<td>Cubic-time matrix multiplication of two 1000x1000 matrics. This benchmark evaluates the performance of nested loops with
+	a simple inner loop, which is frequent in scientific computing.</tr>
+</table>
+<br>
+<h1>Results</h1><br>
+<table cellpadding="0" cellspacing="0" border="0" class="sortable" id="sorter">
+	<tr><th>Implementation              <th>Language  <th>matmul (sec)<th>matmul (MB)</tr>
+	<tr><th>ICC-12.0.3                  <td>C         <td>1.84  <td>31.8 </tr>
+	<tr><th>GCC-4.3.2                   <td>C         <td>2.31  <td>31.7 </tr>
+	<tr><th>Clang-2.9                   <td>C         <td>2.31  <td>31.7 </tr>
+	<tr><th>Java-1.6.0_14               <td>Java      <td>2.93  <td>55.7 </tr>
+	<tr><th>C#@Mono-2.10.1              <td>C#        <td>8.88  <td>40.6 </tr>
+	<tr><th>6g-20110424                 <td>Go        <td>4.99  <td>38.2 </tr>
+	<tr><th>GDC-0.24                    <td>D         <td>8.81  <td>34.0 </tr>
+	<tr><th>V8-r7677                    <td>Javascript<td>17.24 <td>141.6</tr>
+	<tr><th>JaegarMonkey-a95d42642281    <td>Javascript<td>77.48 <td>35.9 </tr>
+	<tr><th>Rhino-1.7r2                 <td>Javascript<td>79.87 <td>567.8</tr>
+	<tr><th>LuaJIT-2.0.0-beta6 (JIT)    <td>Lua       <td>2.68  <td>33.1 </tr>
+	<tr><th>LuaJIT-2.0.0-beta6 (JIT-off)<td>Lua       <td>20.41 <td>33.0 </tr>
+	<tr><th>Lua-5.1.4                   <td>Lua       <td>68.34 <td>65.4 </tr>
+	<tr><th>PyPy-1.4.1                  <td>Python    <td>40.60 <td>98.4 </tr>
+	<tr><th>CPython-2.7.1               <td>Python    <td>191.92<td>117.2</tr>
+	<tr><th>CPython-3.2                 <td>Python    <td>187.55<td>118.9</tr>
+	<tr><th>IronPython-2.7@Mono-2.10.1  <td>Python    <td>230.86<td>289.4</tr>
+	<tr><th>Jython-2.5.2                <td>Python    <td>706.76<td>493.0</tr>
+	<tr><th>Perl-5.12.2                 <td>Perl      <td>230.34<td>225.6</tr>
+	<tr><th>JRuby-1.6.1                 <td>Ruby      <td>367.24<td>431.1</tr>
+	<tr><th>IronRuby-1.1.1@Mono-2.10.1  <td>Ruby      <td>608.12<td>177.9</tr>
+	<tr><th>Ruby-1.9.2p180              <td>Ruby      <td>699.70<td>196.7</tr>
+	<tr><th>R-2.13.0                    <td>R         <td>2.68  <td>53.0 </tr>
+</table>
+<br>
+<h1>Notes</h1><br>
+<table cellpadding="0" cellspacing="0" border="0" class="sortable">
+<tr></tr>
+<tr><th>General<td>
+1) C programs are compiled with "gcc/clang -O3 -fomit-frame-pointer" or "icc -O3 -fomit-frame-pointer -xSSE4.1"<br>
+2) Due a technical complication, Java programs are compiled on Mac using 1.6.0_24 and run on Linux with 1.6.0_14.<br>
+3) Mono-sgen is used for implementations requiring the .NET framework. Mono-sgen is usually faster but costs more memory than mono.<br>
+<tr><th>matmul<td>
+1) The built-in "Matrix" class in Ruby does not transpose the second matrix before multiplication. Using the built-in class is twice as slow.<br>
+2) Testing R in this benchmark is actually unfair to other scripting languages.
+</tr>
+</table>
+</div>
+<script type="text/javascript">
+var sorter=new table.sorter("sorter");
+sorter.init("sorter",2);
+</script>
+</body>
+</html>

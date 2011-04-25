@@ -1,0 +1,16 @@
+* {margin:0; padding:0}
+body {font:10px Verdana,Arial}
+#wrapper {width:825px; margin:50px auto}
+.sortable {width:823px; border:1px solid #ccc; border-bottom:none}
+.sortable th {padding:4px 6px 6px; background:#444; color:#fff; text-align:left; color:#ccc}
+.sortable td {padding:2px 4px 4px; background:#fff; border-bottom:1px solid #ccc}
+.sortable .head {background:#444 url(images/sort.gif) 6px center no-repeat; cursor:pointer; padding-left:18px}
+.sortable .desc {background:#222 url(images/desc.gif) 6px center no-repeat; cursor:pointer; padding-left:18px}
+.sortable .asc {background:#222 url(images/asc.gif) 6px  center no-repeat; cursor:pointer; padding-left:18px}
+.sortable .head:hover, .sortable .desc:hover, .sortable .asc:hover {color:#fff}
+.sortable .even td {background:#f2f2f2}
+.sortable .odd td {background:#fff}
+
+a:link {text-decoration: none; color:#00c}
+a:visited {text-decoration: none; color:#00c}
+a:hover {text-decoration: underline; color:red}
