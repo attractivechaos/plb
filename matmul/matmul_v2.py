@@ -6,13 +6,13 @@ import sys, array
 # reference: http://www.syntagmatic.net/matrix-multiplication-in-python/
 
 def matmul(a, b): # FIXME: no error checking
-	ra, rb = list(range(len(a))), list(range(len(b)))
-	c = [array.array('d', [b[j][i] for j in rb]) for i in rb]
-	d = [array.array('d', [0 for j in range(len(b[0]))]) for i in ra] # transpose
+	ra, rb, rb0 = list(range(len(a))), list(range(len(b))), list(range(len(b[0])))
+	c = [array.array('d', [b[j][i] for j in rb]) for i in rb0]
+	d = [array.array('d', [0 for j in rb0]) for i in ra] # transpose
 	for i in ra:
-		ai = a[i]
-		for j in rb:
-			d[i][j] = sum(ai[k] * c[j][k] for k in ra)
+		for j in rb0:
+			ai, cj = a[i], c[j]
+			d[i][j] = sum(ai[k] * cj[k] for k in rb)
 	return d
 
 def main():
