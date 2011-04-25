@@ -5,12 +5,9 @@
 void print_data(int n)
 {
 	int i;
-	unsigned x = 1234567890;
-	for (i = 0; i < n; ++i) {
-		x = (unsigned)(n * ((double)x / UINT_MAX) / 4) * 271828183u;
-		printf("%u\n", x);
-		x = 1664525L * x + 1013904223L;
-	}
+	srand48(11);
+	for (i = 0; i < n; ++i)
+		printf("%u\n", (unsigned)((lrand48() % (n/4))  * 271828183u));
 }
 
 int main(int argc, char *argv[])
