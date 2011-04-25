@@ -5,7 +5,7 @@ import sys
 # reference: http://www.syntagmatic.net/matrix-multiplication-in-python/
 
 def matmul(a, b): # FIXME: no error checking
-	c = [[b[j][i] for j in range(len(b[0]))] for i in range(len(b))]
+	c = [[b[j][i] for j in range(len(b))] for i in range(len(b[0]))]
 	d = [[0 for j in range(len(b[0]))] for i in range(len(a))] # transpose
 	for i in range(len(a)):
 		for j in range(len(b[0])):
