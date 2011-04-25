@@ -1,4 +1,12 @@
+if #arg == 0 then
+	print("Usage: luajit patmatch.lua pattern < in.file")
+	os.exit(1)
+end
+
+local lineno = 0
 for l in io.lines() do
-	local pr, s, pa = l:match('([a-zA-Z][a-zA-Z0-9]*)://([^ /]+)(/[^ ]*)?')
-	if pr then print(pr, s, pa) end
+	lineno = lineno + 1
+	if l:find(arg[1]) then
+		print(lineno .. ':' .. l)
+	end
 end

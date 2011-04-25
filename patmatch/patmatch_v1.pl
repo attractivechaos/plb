@@ -1,4 +1,6 @@
+die("Usage: patmatch.pl regexp in.file\n") if (@ARGV == 0);
+my $re = shift(@ARGV);
 while (<>) {
-	chomp;
-	print "$1\t$2\t$3\n" if /([a-zA-Z][a-zA-Z0-9]*):\/\/([^ \/]+)(\/[^ ]*)?/
+  chomp;
+  print "$.:", $_, "\n" if /$re/;
 }
