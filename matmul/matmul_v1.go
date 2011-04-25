@@ -30,12 +30,12 @@ func matmul(a [][]float64, b [][]float64) [][]float64 {
 			c[i][j] = b[j][i]
 		}
 	}
-	for i := 0; i < m; i++ {
+	for i, am := range a {
 		x[i] = make([]float64, p)
-		for j := 0; j < p; j++ {
+		for j, cm := range c {
 			s := float64(0)
-			for k := 0; k < n; k++ {
-				s += a[i][k] * c[j][k]
+			for k, m := range am {
+				s += m*cm[k]
 			}
 			x[i][j] = s
 		}
