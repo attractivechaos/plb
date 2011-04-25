@@ -64,7 +64,7 @@
 2) Due a technical complication, Java programs are compiled on Mac using 1.6.0_24 and run on Linux with 1.6.0_14.<br>
 3) Mono-sgen is used for implementations requiring the .NET framework. Mono-sgen is usually faster but costs more memory than mono.<br>
 <tr><th>matmul<td>
-1) LuaJIT-jit, PyPy, CPython2/3 and IronPython use "matmul_v2.*" and the rest use "matmul_v1.*" in the source code directory.
+1) LuaJIT-jit, PyPy, CPython2/3 and IronPython use "matmul_v2.*" and the rest use "matmul_v1.*" in the source code directory.<br>
 2) The built-in "Matrix" class in Ruby does not transpose the second matrix before multiplication. Using the built-in class is twice as slow.<br>
 3) Testing R in this benchmark is actually unfair to other scripting languages.
 </tr>
