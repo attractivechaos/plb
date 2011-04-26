@@ -37,31 +37,31 @@
 <br>
 <h1>Results</h1><br>
 <table cellpadding="0" cellspacing="0" border="0" class="sortable" id="sorter">
-	<tr><th>Implementation              <th>Language  <th>matmul:t<th>matmul:m<th>patmch:1t<th>patmch:2t<th>hash:t<th>hash:m</tr>
-	<tr><th>ICC-12.0.3                  <td>C         <td>1.8  <td>31.8 <td>  1.6<td>  4.1</tr>
-	<tr><th>GCC-4.3.2                   <td>C         <td>2.3  <td>31.7 <td>  1.7<td>  4.5</tr>
-	<tr><th>Clang-2.9                   <td>C         <td>2.3  <td>31.7 <td>  1.8<td>  4.1</tr>
-	<tr><th>Java-1.6.0_14               <td>Java      <td>2.9  <td>55.7 <td>999.9<td>999.9</tr>
-	<tr><th>C#@Mono-2.10.1              <td>C#        <td>8.9  <td>40.6 <td>999.9<td>999.9</tr>
-	<tr><th>6g-20110424                 <td>Go        <td>5.0  <td>38.2 <td>999.9<td>999.9</tr>
-	<tr><th>GDC-0.24                    <td>D         <td>8.8  <td>34.0 <td>999.9<td>999.9</tr>
-	<tr><th>V8-r7677                    <td>Javascript<td>17.2 <td>141.6<td>  1.8<td>  2.9</tr>
-	<tr><th>JaegarMonkey-a95d42642281   <td>Javascript<td>77.5 <td>35.9 <td>  1.9<td>  2.8</tr>
-	<tr><th>Rhino-1.7r2                 <td>Javascript<td>79.9 <td>567.8<td>999.9<td>999.9</tr>
-	<tr><th>LuaJIT-2.0.0-beta6 (JIT)    <td>Lua       <td>2.3  <td>32.2 <td>  5.9<td>999.9</tr>
-	<tr><th>LuaJIT-2.0.0-beta6 (JIT-off)<td>Lua       <td>20.4 <td>33.0 <td>  5.6<td>999.9</tr>
-	<tr><th>Lua-5.1.4                   <td>Lua       <td>68.3 <td>65.4 <td>  6.2<td>999.9</tr>
-	<tr><th>Perl-5.12.2                 <td>Perl      <td>230.3<td>225.6<td>  0.5<td> 12.6</tr>
-	<tr><th>PyPy-1.4.1                  <td>Python    <td>8.5  <td>84.1 <td>  4.0<td>  7.3</tr>
-	<tr><th>CPython-3.2                 <td>Python    <td>121.9<td>93.2 <td>  5.7<td> 13.8</tr>
-	<tr><th>CPython-2.7.1               <td>Python    <td>153.9<td>91.3 <td>  5.5<td> 12.6</tr>
-	<tr><th>IronPython-2.7@Mono-2.10.1  <td>Python    <td>202.7<td>190.2<td> 21.9<td> 49.9</tr>
-	<tr><th>Jython-2.5.2                <td>Python    <td>706.8<td>493.0<td> 48.5<td>143.3</tr>
-	<tr><th>R-2.13.0                    <td>R         <td>2.7  <td>53.0 <td>999.9<td>999.9</tr>
-	<tr><th>JRuby-1.6.1                 <td>Ruby      <td>330.2<td>433.8<td>  4.9<td> 24.0</tr>
-	<tr><th>IronRuby-1.1.1@Mono-2.10.1  <td>Ruby      <td>510.0<td>176.0<td> 25.5<td> 54.5</tr>
-	<tr><th>Ruby-1.9.2p180              <td>Ruby      <td>628.4<td>196.6<td> 15.4<td> 30.3</tr>
-	<tr><th>Rubinius-1.2.3              <td>Ruby      <td>298.1<td>162.5<td> 20.1<td> 33.8</tr>
+	<tr><th>Implementation              <th>Language  <th>matmul:t<th>matmul:m<th>patmch:1t<th>patmch:2t<th>dict:t<th>dict:m</tr>
+	<tr><th>ICC-12.0.3                  <td>C         <td>1.8  <td>31.8 <td>  1.6<td>  4.1<td>  3.7<td> 76.6</tr>
+	<tr><th>GCC-4.3.2                   <td>C         <td>2.3  <td>31.7 <td>  1.7<td>  4.5<td>  3.8<td> 76.5</tr>
+	<tr><th>Clang-2.9                   <td>C         <td>2.3  <td>31.7 <td>  1.8<td>  4.1<td>  3.8<td> 76.5</tr>
+	<tr><th>Java-1.6.0_14               <td>Java      <td>2.9  <td>55.7 <td>999.9<td>999.9<td> 18.5<td>306.4</tr>
+	<tr><th>C#@Mono-2.10.1              <td>C#        <td>8.9  <td>40.6 <td>999.9<td>999.9<td>  5.2<td>113.9</tr>
+	<tr><th>6g-20110424                 <td>Go        <td>5.0  <td>38.2 <td>999.9<td>999.9<td>  6.4<td>193.8</tr>
+	<tr><th>GDC-0.24                    <td>D         <td>8.8  <td>34.0 <td>999.9<td>999.9<td>  3.2<td> 92.4</tr>
+	<tr><th>V8-r7677                    <td>Javascript<td>17.2 <td>141.6<td>  1.8<td>  2.9<td>  6.6<td> 97.3</tr>
+	<tr><th>JaegarMonkey-a95d42642281   <td>Javascript<td>77.5 <td>35.9 <td>  1.9<td>  2.8<td>  9.8<td>274.2</tr>
+	<tr><th>Rhino-1.7r2                 <td>Javascript<td>79.9 <td>567.8<td>999.9<td>999.9<td>999.9<td>999.9</tr>
+	<tr><th>LuaJIT-2.0.0-beta6 (JIT)    <td>Lua       <td>2.3  <td>32.2 <td>  5.9<td>999.9<td>  4.5<td>123.7</tr>
+	<tr><th>LuaJIT-2.0.0-beta6 (JIT-off)<td>Lua       <td>20.4 <td>33.0 <td>  5.6<td>999.9<td>  4.6<td>123.6</tr>
+	<tr><th>Lua-5.1.4                   <td>Lua       <td>68.3 <td>65.4 <td>  6.2<td>999.9<td>  5.7<td>197.6</tr>
+	<tr><th>Perl-5.12.2                 <td>Perl      <td>230.3<td>225.6<td>  0.5<td> 12.6<td>  6.7<td>181.2</tr>
+	<tr><th>PyPy-1.4.1                  <td>Python    <td>8.5  <td>84.1 <td>  4.0<td>  7.3<td>  4.6<td>112.6</tr>
+	<tr><th>CPython-3.2                 <td>Python    <td>121.9<td>93.2 <td>  5.7<td> 13.8<td>  5.8<td>154.1</tr>
+	<tr><th>CPython-2.7.1               <td>Python    <td>153.9<td>91.3 <td>  5.5<td> 12.6<td>  4.6<td>112.6</tr>
+	<tr><th>IronPython-2.7@Mono-2.10.1  <td>Python    <td>202.7<td>190.2<td> 21.9<td> 49.9<td> 13.7<td>188.6</tr>
+	<tr><th>Jython-2.5.2                <td>Python    <td>706.8<td>493.0<td> 48.5<td>143.3<td> 31.3<td>527.3</tr>
+	<tr><th>R-2.13.0                    <td>R         <td>2.7  <td>53.0 <td>999.9<td>999.9<td>999.9<td>999.9</tr>
+	<tr><th>JRuby-1.6.1                 <td>Ruby      <td>330.2<td>433.8<td>  4.9<td> 24.0<td> 26.7<td>501.2</tr>
+	<tr><th>IronRuby-1.1.1@Mono-2.10.1  <td>Ruby      <td>510.0<td>176.0<td> 25.5<td> 54.5<td> 39.6<td>367.2</tr>
+	<tr><th>Ruby-1.9.2p180              <td>Ruby      <td>628.4<td>196.6<td> 15.4<td> 30.3<td>  8.6<td>156.8</tr>
+	<tr><th>Rubinius-1.2.3              <td>Ruby      <td>298.1<td>162.5<td> 20.1<td> 33.8<td> 97.0<td>273.4</tr>
 </table>
 <br>
 <h1>Notes</h1><br>
