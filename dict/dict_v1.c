@@ -7,7 +7,7 @@ KHASH_MAP_INIT_STR(str, int)
 int main(int argc, char *argv[])
 {
 	char *buf;
-	int ret, max = 0;
+	int ret, max = 1;
 	khint_t k;
 	khash_t(str) *h;
 	buf = malloc(BUF_SIZE); // buffer size
@@ -18,8 +18,10 @@ int main(int argc, char *argv[])
 		if (ret) { // absent
 			kh_key(h, k) = strdup(buf);
 			kh_val(h, k) = 1;
-		} else ++kh_val(h, k);
-		if (kh_val(h, k) > max) max = kh_val(h, k);
+		} else {
+			++kh_val(h, k);
+			if (kh_val(h, k) > max) max = kh_val(h, k);
+		}
 	}
 	printf("%u\t%d\n", kh_size(h), max);
 	for (k = kh_begin(h); k < kh_end(h); ++k)
