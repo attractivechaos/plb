@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 		k = kh_put(str, h, buf, &ret);
 		if (ret) { // absent
 			kh_key(h, k) = strdup(buf);
-			kh_val(h, k) = 0;
+			kh_val(h, k) = 1;
 		} else ++kh_val(h, k);
 		if (kh_val(h, k) > max) max = kh_val(h, k);
 	}
