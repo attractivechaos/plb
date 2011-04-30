@@ -48,7 +48,7 @@
 	<tr><th>ICC-12.0.3                  <td>C         <td>1.8  <td>31.8 <td>  1.6<td>  4.1<td>  3.0<td> 52.6</tr>
 	<tr><th>GCC-4.3.2                   <td>C         <td>2.3  <td>31.7 <td>  1.7<td>  4.5<td>  3.0<td> 52.6</tr>
 	<tr><th>Clang@LLVM-2.9              <td>C         <td>2.3  <td>31.7 <td>  1.8<td>  4.1<td>  3.0<td> 52.6</tr>
-	<tr><th>Java@JRE-1.6.0_14           <td>Java      <td>2.9  <td>55.7 <td>  6.2<td> 14.2<td> 18.5<td>306.4</tr>
+	<tr><th>Java@JRE-1.6.0_25           <td>Java      <td>2.6  <td>67.1 <td>  6.8<td> 13.4<td>  6.7<td>314.8</tr>
 	<tr><th>C#@Mono-2.10.1              <td>C#        <td>8.9  <td>40.6 <td> 15.7<td> 45.1<td>  5.2<td>113.9</tr>
 	<tr><th>6g-20110424                 <td>Go        <td>3.1  <td>38.2 <td> 21.2<td> 56.2<td>  6.2<td>190.4</tr>
 	<tr><th>GDC-0.24                    <td>D         <td>8.5  <td>33.9 <td>999.9<td>999.9<td>  3.2<td> 92.4</tr>
@@ -78,8 +78,7 @@
 <tr></tr>
 <tr><th>General<td>
 1) C programs are compiled with "gcc/clang -O3 -fomit-frame-pointer" or "icc -O3 -fomit-frame-pointer -xSSE4.1"<br>
-2) Due a technical complication, Java programs are compiled on Mac using 1.6.0_24 and run on Linux with 1.6.0_14.<br>
-3) Mono-sgen is used for implementations requiring the .NET framework. Mono-sgen is usually faster but costs more memory than mono.<br>
+2) Mono-sgen is used for implementations requiring the .NET framework. Mono-sgen is usually faster but costs more memory than mono.<br>
 <tr><th>matmul:t<br>matmul:m<td>
 1) LDC, PyPy, CPython2/3 and IronPython use "matmul_v2.*" and the rest use "matmul_v1.*" in the source code directory.<br>
 2) The built-in <a href="http://www.ruby-doc.org/stdlib/libdoc/matrix/rdoc/classes/Matrix.html">Matrix</a> class in Ruby does not transpose the second matrix before multiplication. Using the built-in class is twice as slow.<br>
