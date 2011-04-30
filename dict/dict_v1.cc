@@ -27,27 +27,39 @@ namespace std {
 typedef unordered_map<const char*, int, hash<const char*>, eqstr> strhash;
 
 #define BUF_SIZE 0x10000
+#define BLOCK_SIZE 0x100000
 
 int main(int argc, char *argv[])
 {
 	char *buf;
-	int max = 1;
+	int ret, max = 1, block_end = 0, curr = 0;
+	char **mem;
 	strhash *h = new strhash;
 	buf = (char*)malloc(BUF_SIZE); // buffer size
+	mem = (char**)malloc(sizeof(void*));
+	mem[0] = (char*)malloc(BLOCK_SIZE); // memory buffer to avoid memory fragments
+	curr = block_end = 0;
 	while (!feof(stdin)) {
 		fgets(buf, BUF_SIZE, stdin);
 		strhash::iterator p = h->find(buf);
-		if (p == h->end()) h->insert(pair<const char*, int>(strdup(buf), 1));
-		else {
+		if (p == h->end()) {
+			int l = strlen(buf) + 1;
+			if (block_end + l > BLOCK_SIZE) {
+				++curr; block_end = 0;
+				mem = (char**)realloc(mem, (curr + 1) * sizeof(void*));
+				mem[curr] = (char*)malloc(BLOCK_SIZE);
+			}
+			memcpy(mem[curr] + block_end, buf, l);
+			h->insert(pair<const char*, int>(mem[curr] + block_end, 1));
+			block_end += l;
+		} else {
 			++p->second;
 			if (max < p->second) max = p->second;
 		}
 	}
 	printf("%u\t%d\n", h->size(), max);
-	strhash::iterator p;
-	for (p = h->begin(); p != h->end(); ++p)
-		free((char*)p->first);
+	for (int i = 0; i <= curr; ++i) free(mem[i]);
+	free(mem); free(buf);
 	delete h;
-	free(buf);
 	return 0;
 }
