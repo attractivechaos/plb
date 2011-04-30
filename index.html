@@ -45,14 +45,14 @@
 <h1>Results</h1><br>
 <table cellpadding="0" cellspacing="0" border="0" class="sortable" id="sorter">
 	<tr><th>Implementation              <th>Language  <th>matmul:t<th>matmul:m<th>patmch:1t<th>patmch:2t<th>dict:t<th>dict:m</tr>
-	<tr><th>ICC-12.0.3                  <td>C         <td>1.8  <td>31.8 <td>  1.6<td>  4.1<td>  3.7<td> 76.6</tr>
-	<tr><th>GCC-4.3.2                   <td>C         <td>2.3  <td>31.7 <td>  1.7<td>  4.5<td>  3.8<td> 76.5</tr>
-	<tr><th>Clang-2.9                   <td>C         <td>2.3  <td>31.7 <td>  1.8<td>  4.1<td>  3.8<td> 76.5</tr>
+	<tr><th>ICC-12.0.3                  <td>C         <td>1.8  <td>31.8 <td>  1.6<td>  4.1<td>  3.0<td> 52.6</tr>
+	<tr><th>GCC-4.3.2                   <td>C         <td>2.3  <td>31.7 <td>  1.7<td>  4.5<td>  3.0<td> 52.6</tr>
+	<tr><th>Clang@LLVM-2.9              <td>C         <td>2.3  <td>31.7 <td>  1.8<td>  4.1<td>  3.0<td> 52.6</tr>
 	<tr><th>Java@JRE-1.6.0_14           <td>Java      <td>2.9  <td>55.7 <td>  6.2<td> 14.2<td> 18.5<td>306.4</tr>
 	<tr><th>C#@Mono-2.10.1              <td>C#        <td>8.9  <td>40.6 <td> 15.7<td> 45.1<td>  5.2<td>113.9</tr>
 	<tr><th>6g-20110424                 <td>Go        <td>3.1  <td>38.2 <td> 21.2<td> 56.2<td>  6.2<td>190.4</tr>
 	<tr><th>GDC-0.24                    <td>D         <td>8.5  <td>33.9 <td>999.9<td>999.9<td>  3.2<td> 92.4</tr>
-	<tr><th>LDC-20110428                <td>D         <td>6.7  <td>34.0 <td>999.9<td>999.9<td>999.9<td>999.9</tr>
+	<tr><th>LDC-20110428@LLVM-2.9       <td>D         <td>6.7  <td>34.0 <td>999.9<td>999.9<td>999.9<td>999.9</tr>
 	<tr><th>V8-r7677                    <td>Javascript<td>17.2 <td>141.6<td>  1.8<td>  2.9<td>  6.6<td> 97.3</tr>
 	<tr><th>JaegarMonkey-a95d42642281   <td>Javascript<td>77.5 <td>35.9 <td>  1.9<td>  2.8<td>  9.8<td>274.2</tr>
 	<tr><th>Rhino-1.7r2@JRE-1.6.0_14   <td>Javascript<td>79.9 <td>567.8<td>999.9<td>999.9<td>999.9<td>999.9</tr>
@@ -101,10 +101,8 @@
 <tr><th>dict:t<br>dict:m<td>
 1) All language implementations use "dict_v1.*" in the <a href="https://github.com/attractivechaos/plb/blob/master/dict/">repository</a>.<br>
 2) My <a href="https://github.com/attractivechaos/plb/blob/master/ext/khash.h">khash</a> library is used for the
-	<a href="https://github.com/attractivechaos/plb/blob/master/dict/dict_v1.c">C implementation</a>.
-	A <a href="https://github.com/attractivechaos/plb/blob/master/dict/dict_v1.cc">C++ implementation</a>
-	takes 3.6 seconds with 94.4MB memory.<br>
-3) For C/C++, releasing memory takes 0.5-1 second. For this benchmark, we can actually skip memory releasing, but this is cheating.
+	<a href="https://github.com/attractivechaos/plb/blob/master/dict/dict_v1.c">C implementation</a>.<br>
+3) The C implementation manipulates the memory, which may be unfair to other implementations.
 </tr>
 </table>
 </div>
