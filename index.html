@@ -52,7 +52,7 @@
 	<tr><th>C#@Mono-2.10.1              <td>C#        <td>8.9  <td>40.6 <td> 15.7<td> 45.1<td>  5.2<td>113.9</tr>
 	<tr><th>6g-20110424                 <td>Go        <td>3.1  <td>38.2 <td> 21.2<td> 56.2<td>  6.2<td>190.4</tr>
 	<tr><th>GDC-0.24                    <td>D         <td>8.5  <td>33.9 <td>999.9<td>999.9<td>  3.2<td> 92.4</tr>
-	<tr><th>LDC-20110428@LLVM-2.9       <td>D         <td>6.7  <td>34.0 <td>999.9<td>999.9<td>999.9<td>999.9</tr>
+	<tr><th>LDC-20110428@LLVM-2.9       <td>D         <td>2.4  <td>31.4 <td>999.9<td>999.9<td>999.9<td>999.9</tr>
 	<tr><th>V8-r7677                    <td>Javascript<td>17.2 <td>141.6<td>  1.8<td>  2.9<td>  6.6<td> 97.3</tr>
 	<tr><th>JaegarMonkey-a95d42642281   <td>Javascript<td>77.5 <td>35.9 <td>  1.9<td>  2.8<td>  9.8<td>274.2</tr>
 	<tr><th>Rhino-1.7r2@JRE-1.6.0_14    <td>Javascript<td>79.9 <td>567.8<td>999.9<td>999.9<td>999.9<td>999.9</tr>
@@ -78,7 +78,8 @@
 <tr></tr>
 <tr><th>General<td>
 1) C programs are compiled with "gcc/clang -O3 -fomit-frame-pointer" or "icc -O3 -fomit-frame-pointer -xSSE4.1"<br>
-2) Mono-sgen is used for implementations requiring the .NET framework. Mono-sgen is usually faster but costs more memory than mono.<br>
+2) D programs are compiled with "ldc -O3 -release" or "gdc -O3".<br>
+3) Mono-sgen is used for implementations requiring the .NET framework. Mono-sgen is usually faster but costs more memory than mono.<br>
 <tr><th>matmul:t<br>matmul:m<td>
 1) LDC, PyPy, CPython2/3 and IronPython use "matmul_v2.*" and the rest use "matmul_v1.*" in the source code directory.<br>
 2) The built-in <a href="http://www.ruby-doc.org/stdlib/libdoc/matrix/rdoc/classes/Matrix.html">Matrix</a> class in Ruby does not transpose the second matrix before multiplication. Using the built-in class is twice as slow.<br>
