@@ -1,8 +1,17 @@
+/*
+ * This is an optimized version of the following C++ program:
+ *
+ *   http://keithlea.com/javabench/src/cpp/hash.cpp
+ *
+ * Keith in his benchmark (http://keithlea.com/javabench/data) showed that the
+ * Java implementation is twice as fast as the C++ version. In fact, this is
+ * only because the C++ implementation is substandard. Most importantly, Keith
+ * is using "sprintf()" to convert an integer to a string, which is known to be
+ * extremely inefficient.
+ */
 #include <stdio.h>
 #include "khash.h"
 KHASH_MAP_INIT_STR(str, int)
-
-#define BLOCK_SIZE 0x100000
 
 inline void int2str(int c, int base, char *ret)
 {
@@ -18,6 +27,8 @@ inline void int2str(int c, int base, char *ret)
 	}
 }
 
+#ifndef _USE_STRDUP
+#define BLOCK_SIZE 0x100000
 int main(int argc, char *argv[])
 {
 	char **mem = 0;
@@ -55,3 +66,30 @@ int main(int argc, char *argv[])
 	kh_destroy(str, h);
 	return 0;
 }
+#else // _USE_STRDUP
+int main(int argc, char *argv[])
+{
+	int i, l, n = 1000000, ret, c = 0;
+	khash_t(str) *h;
+	khint_t k;
+	h = kh_init(str);
+	if (argc > 1) n = atoi(argv[1]);
+	for (i = 1; i <= n; ++i) {
+		char buf[16];
+		int2str(i, 16, buf);
+		k = kh_put(str, h, strdup(buf), &ret);
+		kh_val(h, k) = i;
+	}
+	for (i = 1; i <= n; ++i) {
+		char buf[16];
+		int2str(i, 10, buf);
+		k = kh_get(str, h, buf);
+		if (k != kh_end(h)) ++c;
+	}
+	for (k = kh_begin(h); k != kh_end(h); ++k) // explicitly freeing memory takes 10-20% CPU time.
+		if (kh_exist(h, k)) free((char*)kh_key(h, k));
+	printf("%d\n", c);
+	kh_destroy(str, h);
+	return 0;
+}
+#endif
