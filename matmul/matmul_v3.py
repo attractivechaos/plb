@@ -3,9 +3,8 @@ import sys
 
 
 def matmul(a, b):
-    c = [None] * len(b[0])
+    c = [array.array("d", [0.0]) * len(b) for _ in xrange(len(b[0]))]
     for i in xrange(len(b[0])):
-        c[i] = array.array("d", [0.0]) * len(b)
         for j in xrange(len(b)):
             c[i][j] = b[j][i]
 
@@ -21,9 +20,8 @@ def matmul(a, b):
 
 def build_matrix(n):
     t = 1.0 / n / n
-    m = [None] * n
+    m = [array.array("d", [0.0]) * n for _ in xrange(n)]
     for i in xrange(n):
-        m[i] = array.array("d", [0.0]) * n
         for j in xrange(n):
             m[i][j] = t * (i - j) * (i + j)
     return m
