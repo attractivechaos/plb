@@ -1,21 +1,30 @@
-package main;
-import("fmt"; "bufio"; "os"; "regexp"; "flag")
+package main
+
+import (
+	"fmt"
+	"bufio"
+	"os"
+	"regexp"
+	"flag"
+)
 
 func main() {
-	flag.Parse();
+	flag.Parse()
 	if flag.NArg() == 0 {
-		fmt.Printf("Usage: patmch patter < in.file\n");
+		fmt.Printf("Usage: patmch pattern < in.file\n")
 		return
 	}
 	re := regexp.MustCompile(flag.Arg(0))
-	r := bufio.NewReader(os.Stdin);
+	r := bufio.NewReader(os.Stdin)
+	w := bufio.NewWriter(os.Stdout)
 	for {
-		if l, e := r.ReadBytes('\n'); e == nil {
-			if re.Find(l[0:len(l)-1]) != nil {
-				fmt.Printf("%s", l)
-			}
-		} else {
-			break;
+		l, e := r.ReadBytes('\n')
+		if e != nil {
+			break
+		}
+		if re.Match(l[:len(l)-1]) {
+			w.Write(l)
 		}
 	}
+	w.Flush()
 }
