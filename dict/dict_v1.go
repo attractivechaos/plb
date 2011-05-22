@@ -9,7 +9,7 @@ import (
 
 func main() {
 	r := bufio.NewReader(os.Stdin)
-	h := make(map[string]int, 5e6)
+	h := make(map[string]int, 1e6)
 	max := 1
 	for {
 		b, e := r.ReadSlice('\n')
