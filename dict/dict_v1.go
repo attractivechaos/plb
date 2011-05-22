@@ -8,14 +8,15 @@ import (
 )
 
 func main() {
-	r, _ := bufio.NewReaderSize(os.Stdin, 1e6)
+	r := bufio.NewReader(os.Stdin)
 	h := make(map[string]int, 1e6)
 	max := 1
 	for {
-		l, e := r.ReadString('\n')
+		b, e := r.ReadSlice('\n')
 		if e != nil {
 			break
 		}
+		l := string(b)
 		v := h[l] + 1
 		h[l] = v
 		if v > max {
