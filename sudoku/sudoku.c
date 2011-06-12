@@ -32,17 +32,17 @@ uint8_t *sd_genaux()
 {
 	int i, j, k;
 	uint8_t *a;
-	a = malloc(81 * 20);
+	a = malloc(81 * 20); // 81 rows and 20 columns (each cell has 20 neighbors)
 	for (i = 0; i < 9; ++i) {
 		for (j = 0; j < 9; ++j) {
 			uint8_t *a_ij = a + (9 * i + j) * 20;
 			int x = 0, iN, jN, ki, kj;
-			for (k = 0; k < 9; ++k) // current rows
+			for (k = 0; k < 9; ++k) // add other cell indices from the current row
 				if (k != i) a_ij[x++] = 9 * k + j;
-			for (k = 0; k < 9; ++k) // current column
+			for (k = 0; k < 9; ++k) // other cell indices from the current column
 				if (k != j) a_ij[x++] = 9 * i + k;
-			iN = i / 3 * 3; jN = j / 3 * 3;
-			for (ki = iN; ki < iN + 3; ++ki) // current box
+			iN = i / 3 * 3; jN = j / 3 * 3; // the top-left coordinate of the current box
+			for (ki = iN; ki < iN + 3; ++ki) // other cell indices from the current box
 				for (kj = jN; kj < jN + 3; ++kj)
 					if (ki != i && kj != j) a_ij[x++] = 9 * ki + kj;
 		}
