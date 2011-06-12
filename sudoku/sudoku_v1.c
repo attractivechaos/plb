@@ -111,7 +111,6 @@ int sd_solve(const sd128_t *e, const char *s)
 		}
 		out[81] = 0;
 		puts(out);
-		p[i--] = -1;
 	}
 	return 0;
 }
