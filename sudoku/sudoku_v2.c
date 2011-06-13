@@ -117,6 +117,7 @@ int sd_solve(const uint8_t *a, const char *_s)
 				if (1<<i & swap[min_i]) { // i is a possible number
 					memcpy(stack[top], swap, 162);
 					if (sd_update(a, stack[top], stack2, min_i, i) >= 0) { // then push to the stack
+						int k;printf("%d\t%d\t%d\t", min, min_i, top); for (k = 0; k < 81; ++k) printf("%d", stack[top][k]>>9); printf("\n");
 						if (++top >= m_stack) // "++top" to push to the stack
 							fprintf(stderr, "[sd_solve] Woops! We need a dynamic stack.\n");
 					}
