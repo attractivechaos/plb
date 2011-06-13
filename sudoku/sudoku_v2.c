@@ -69,13 +69,12 @@ int sd_update(const uint8_t *a, uint16_t *z, uint16_t *stack2, int p, int x)
 		for (l = 0; l < 20; ++l) { // update q's neighbors
 			uint16_t *zaql = z + aq[l];
 			if (*zaql & y) { // neighbor ak[l] should be updated
-				if (*zaql>>9 == 1) break; // confict!
+				if (*zaql>>9 == 1) return -1; // confict!
 				*zaql &= ~y; *zaql -= 1<<9; // update
 				if (*zaql>>9 == 1) // then prepare to update aq[l]'s neighbors
 					stack2[j++] = (int)aq[l]<<8 | sd_first(*zaql); // push to stack2
 			} // otherwise, no need to update
 		}
-		if (l < 20) return -1; // confliction occurred; do not proceed
 	}
 	return 0;
 }
