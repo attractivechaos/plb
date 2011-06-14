@@ -1,4 +1,3 @@
--- NB: LuaJIT-2.0.0-beta6 is buggy and unable to give the correct result
 local bit = require('bit')
 local sudoku = {}
 
@@ -54,12 +53,11 @@ sudoku.solve = function(e, s)
 	x, i_ = {0, 0, 0}, 1
 	while true do
 		while i_ >= 1 and i_ <= 9 do
-			local zi = z[n[i_]]
+			local zi, j_ = z[n[i_]], #z[n[i_]] + 2
 			if p[i_] >= 0 then
 				local t = p[i_]
 				x[1], x[2], x[3] = bit.band(x[1], bit.bnot(zi[t])), bit.band(x[2], bit.bnot(zi[t+1])), bit.band(x[3], bit.bnot(zi[t+2]))
 			end
-			local j_ = #zi + 2
 			for j = p[i_] + 3, #zi, 3 do
 				if bit.band(x[1], zi[j]) == 0 and bit.band(x[2], zi[j+1]) == 0 and bit.band(x[3], zi[j+2]) == 0 then
 					j_ = j; break
@@ -76,8 +74,7 @@ sudoku.solve = function(e, s)
 			for k = 0, 31 do if bit.band(bit.rshift(z[n[j]][p[j]+1], k), 1) == 1 then y[k+33] = n[j] end end
 			for k = 0, 16 do if bit.band(bit.rshift(z[n[j]][p[j]+2], k), 1) == 1 then y[k+65] = n[j] end end
 		end
-		ret[#ret+1] = y
-		i_ = i_ - 1
+		ret[#ret+1], i_ = y, i_ - 1
 	end
 	return ret
 end
