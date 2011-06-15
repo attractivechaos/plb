@@ -106,6 +106,7 @@ int sd_solve(const sd128_t *e, const char *s)
 		out[81] = 0;
 		puts(out);
 	}
+	for (i = 0; i < 9; ++i) free(z[i]);
 	return 0;
 }
 
