@@ -63,6 +63,7 @@ int sd_solve(const sdaux_t *aux, const char *_s)
 					for (r2 = n = 0, p = aux->r[c]; r2 < 9; ++r2)
 						if (sr[p[r2]] == 0) ++n;
 					if (n < min) min = n, cc[i] = c;
+					if (min <= 1) break; // not sure if this line is correct
 				}
 				if (min == 0 || min == 10) cr[i--] = dir = -1;
 			}
