@@ -157,10 +157,9 @@ int main()
 	sdaux_t *a = sd_genmat();
 	char buf[1024];
 	while (fgets(buf, 1024, stdin) != 0) {
-		if (strlen(buf) >= 81) {
-			sd_solve(a, buf);
-			putchar('\n');
-		}
+		if (strlen(buf) < 81) continue;
+		sd_solve(a, buf);
+		putchar('\n');
 	}
 	free(a);
 	return 0;
