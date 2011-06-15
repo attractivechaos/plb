@@ -63,7 +63,7 @@ function sd_solve(R, C, s)
 		end
 		if i < 0 then break end
 		local y = {}
-		for j = 0, 80 do y[j] = s:byte(j+1) - 49 end
+		for j = 0, 80 do y[j] = s:byte(j+1) - 48 end
 		for j = 0, i - 1 do
 			r = R[cc[j]][cr[j]]
 			y[math.floor(r/9)] = math.fmod(r, 9) + 1
