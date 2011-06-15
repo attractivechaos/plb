@@ -58,22 +58,21 @@ int sd_solve(const sdaux_t *aux, const char *_s)
 			if (dir == 1) {
 				int min = 10, n;
 				for (c = 0; c < 324; ++c) {
+					const uint16_t *p;
 					if (sc[c]) continue;
-					for (r2 = n = 0; r2 < 9; ++r2) n += (sr[aux->r[c][r2]] == 0);
+					for (r2 = n = 0, p = aux->r[c]; r2 < 9; ++r2)
+						if (sr[p[r2]] == 0) ++n;
 					if (n < min) min = n, cc[i] = c;
 				}
-				if (min == 0 || min == 10) {
-					cr[i--] = dir = -1;
-					continue;
-				}
-			} else sd_update(aux, sr, sc, aux->r[cc[i]][cr[i]], -1);
+				if (min == 0 || min == 10) cr[i--] = dir = -1;
+			}
 			c = cc[i];
+			if (dir == -1) sd_update(aux, sr, sc, aux->r[c][cr[i]], -1);
 			for (r2 = cr[i] + 1; r2 < 9; ++r2)
 				if (sr[aux->r[c][r2]] == 0) break;
 			if (r2 < 9) {
-				cr[i] = r2;
-				sd_update(aux, sr, sc, aux->r[c][cr[i]], 1);
-				++i; dir = 1;
+				sd_update(aux, sr, sc, aux->r[c][r2], 1);
+				cr[i++] = r2; dir = 1;
 			} else cr[i--] = dir = -1;
 		}
 		if (i < 0) break;
