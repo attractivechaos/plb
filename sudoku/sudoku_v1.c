@@ -137,7 +137,7 @@ int sd_solve(const sdaux_t *aux, const char *_s)
 				if (min == 0 || min == 10) cr[i--] = dir = -1; // backtrack
 			}
 			c = cc[i];
-			if (dir == -1) sd_update(aux, sr, sc, aux->r[c][cr[i]], -1); // revert the choice
+			if (dir == -1 && cr[i] >= 0) sd_update(aux, sr, sc, aux->r[c][cr[i]], -1); // revert the choice
 			for (r2 = cr[i] + 1; r2 < 9; ++r2) // search for the choice to make
 				if (sr[aux->r[c][r2]] == 0) break; // found if the state equals 0
 			if (r2 < 9) {
