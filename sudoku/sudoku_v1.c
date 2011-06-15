@@ -109,7 +109,7 @@ inline void sd_update(const sdaux_t *aux, int16_t sr[729], int16_t sc[324], int 
 // solve a Sudoku; _s is the standard dot/number representation
 int sd_solve(const sdaux_t *aux, const char *_s)
 {
-	int i, j, r, c, r2, dir, hints = 0; // dir=1: forward; dir=-1: backtrack
+	int i, j, r, c, r2, dir, c0, hints = 0; // dir=1: forward; dir=-1: backtrack
 	int16_t sr[729], sc[324]; // sr[r]/sc[c]: state of row r/col c - # constraints applied
 	int16_t cr[81], cc[81];   // cr/cc[i]: row/col chosen at step i
 	char out[82];
@@ -121,16 +121,17 @@ int sd_solve(const sdaux_t *aux, const char *_s)
 		if (a >= 0) ++hints; // count the number of hints
 		cr[i] = cc[i] = -1, out[i] = _s[i];
 	}
-	for (i = 0, dir = 1, out[81] = 0;;) {
+	for (i = c0 = 0, dir = 1, out[81] = 0;;) {
 		while (i >= 0 && i < 81 - hints) { // maximum 81-hints steps
 			if (dir == 1) {
-				int min = 10, n;
-				for (c = 0; c < 324; ++c) {
+				int j, min = 10, n;
+				for (j = 0; j < 324; ++j) {
 					const uint16_t *p;
+					c = (j + c0) % 324; // a trick: try to explore cols not computed before
 					if (sc[c]) continue; // skip if the constraint has been used
 					for (r2 = n = 0, p = aux->r[c]; r2 < 9; ++r2)
 						if (sr[p[r2]] == 0) ++n; // 50% of CPU time goes to this line
-					if (n < min) min = n, cc[i] = c; // choose the most constrained constraint
+					if (n < min) min = n, cc[i] = c, c0 = c + 1; // choose the top constraint
 					if (min <= 1) break; // this is for acceleration; slower without this line
 				}
 				if (min == 0 || min == 10) cr[i--] = dir = -1; // backtrack
