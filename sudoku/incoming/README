@@ -6,7 +6,6 @@ fsss.cc         http://sites.google.com/site/dobrichev/fsss/     Mladen Dobriche
 JSolve*         http://www.enjoysudoku.com/JSolve12.zip          Jason T. Linhart's solver (12)
 sudocoo.c       http://www2.research.att.com/~gsf/               Glenn Fowler's sudocoo
 suexk.c         http://magictour.free.fr/sudoku.htm              Guenter Stertenbrink's suexk
-zerodoku.c      http://www.setbb.com/sudoku/viewtopic.php?t=1663 Jim Schirle's zerodoku (v1)
 zerodoku_v2.c   http://www.setbb.com/sudoku/viewtopic.php?t=1663 Jim Schirle's zerodoku (v2)
 
 
@@ -34,6 +33,5 @@ Compiler: gcc-4.2.1 for OS X (-O2)
  ksudoku               6.0       5.9   N/A
  sudocoo               1.9      92.1   -s2
  suexk                10.6       9.4   s2
- zerodoku              2.7       3.2   -s2
  zerodoku_v2           2.5       2.7   -s2
 ===================================================
