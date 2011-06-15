@@ -1,27 +1,22 @@
-/* UNFINISHED port of Guenter Stertenbrink's suexco */
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
 
-/*
-  In the binary matrix M[729][324], the column vector M[.][c] keeps the constraint. In the following
-  representation, we are storing the positions of non-zero cells.
-*/
 typedef struct {
-	uint16_t r[324][9]; // r[c][i], i=0..8: the index of the i-th row matching col c
-	uint16_t c[729][4]; // c[r][j], j=0..3: the index of the j-th col matching row r
+	uint16_t r[324][9]; // r[c][i]: the index of the i-th row matching col c
+	uint16_t c[729][4]; // c[r][j]: the index of the j-th col matching row r
 } sdaux_t;
 
-sdaux_t *sd_prep()
+sdaux_t *sd_genmat()
 {
 	sdaux_t *a;
-	int i, j, k, r, c;
+	int i, j, k, r, c, c2;
 	int8_t nr[324];
 	a = calloc(1, sizeof(sdaux_t));
 	for (i = r = 0; i < 9; ++i) // generate c[729][4]
 		for (j = 0; j < 9; ++j)
-			for (k = 0; k < 9; ++k) // this "9" means each cell has 9 options
+			for (k = 0; k < 9; ++k) // this "9" means each cell has 9 possible numbers
 				a->c[r][0] = 9 * i + j,                  // row-column constraint
 				a->c[r][1] = (i/3*3 + j/3) * 9 + k + 81, // box-number constraint
 				a->c[r][2] = 9 * i + k + 162,            // row-number constraint
@@ -29,85 +24,69 @@ sdaux_t *sd_prep()
 				++r;
 	for (c = 0; c < 324; ++c) nr[c] = 0;
 	for (r = 0; r < 729; ++r) // generate r[][] from c[][]
-		for (c = 0; c < 4; ++c)
-			k = a->c[r][c], a->r[k][nr[k]++] = r;
+		for (c2 = 0; c2 < 4; ++c2)
+			k = a->c[r][c2], a->r[k][nr[k]++] = r;
 	return a;
 }
 
-inline void sd_update(const sdaux_t *aux, int8_t fr[729], int8_t fc[324], int r)
+inline void sd_update(const sdaux_t *aux, int16_t sr[729], int16_t sc[324], int r, int v)
 {
-	int c, k, d;
-	for (c = 0; c < 4; ++c) {
-		d = aux->c[r][c];
-		++fc[d];
-		for (k = 0; k < 9; ++k) ++fr[aux->r[d][k]];
-	}
-}
-
-inline void sd_revert(const sdaux_t *aux, int8_t fr[729], int8_t fc[324], int r)
-{
-	int c, k, d;
-	for (c = 0; c < 4; ++c) {
-		d = aux->c[r][c];
-		--fc[d];
-		for (k = 0; k < 9; ++k) --fr[aux->r[d][k]];
+	int c2;
+	for (c2 = 0; c2 < 4; ++c2) {
+		int r2, c = aux->c[r][c2];
+		sc[c] += v;
+		for (r2 = 0; r2 < 9; ++r2) sr[aux->r[c][r2]] += v;
 	}
 }
 
 int sd_solve(const sdaux_t *aux, const char *_s)
 {
-	int i, j, r, c;
-	int clues;       // # known cells
-	int8_t fr[729];  // fr[r]: # constraints at row r; 0 iff r has not been marked as forbidden
-	int8_t fc[324];  // fc[c]: # constraints at col c; 0 iff c has not been marked as forbidden
-	uint16_t ir[81]; // ir[i]: row chosen at step i
-	uint16_t ic[81]; // ic[i]: col chosen at step i
-	uint16_t Node[81];
-	int8_t a[9][9];
-	for (i = 0; i < 81; ++i) a[i/9][i%9] = _s[i] >= '1' && _s[i] <= '9'? _s[i] - '1' : -1;
-	for (r = 0; r < 729; ++r) fr[r] = 0;
-	for (c = 0; c < 324; ++c) fc[c] = 0;
-	for (i = clues = 0; i < 9; ++i)
-		for (j = 0; j < 9; ++j)
-			if (a[i][j] >= 0) {
-				++clues;
-				sd_update(aux, fr, fc, 81 * i + 9 * j + a[i][j]);
-			}
-	for (i = 0;; ++i) {
-		int min = 729;
-		ir[i] = 0;
-		for (c = 0; c < 324; ++c) {
-			if (!fc[c]) {
-				int match = 0;
-				for (r = 0; r < 9; ++r)
-					if (!fr[aux->r[c][r]]) ++match;
-				if (match < min) min = match, ic[i] = c; // choose the smallest as the column
-			}
-		}
-		if (min == 0 || min == 729) {
-			if (i == 0) goto end_loop;
-			c = ic[--i];
-			sd_revert(aux, fr, fc, aux->r[c][ir[i]]);
-		}
-		do {
-			c = ic[i];
-			if (++ir[i] >= 9) {
-				if (i == 0) goto end_loop;
-				c = ic[--i];
-				sd_revert(aux, fr, fc, aux->r[c][ir[i]]);
-			}
-			r = aux->r[c][ir[i]];
-		} while (fr[r]);
-		sd_update(aux, fr, fc, r);
-		++Node[i];
+	int i, j, r, c, r2, dir, hints = 0;
+	int16_t sr[729], sc[324]; // sr[r]/sc[c]: row r/col c - #constraints
+	int16_t cr[81], cc[81];  // cr/cc[i]: row/col chosen at step i
+	char out[82];
+	for (r = 0; r < 729; ++r) sr[r] = 0;
+	for (c = 0; c < 324; ++c) sc[c] = 0;
+	for (i = 0; i < 81; ++i) {
+		int a = _s[i] >= '1' && _s[i] <= '9'? _s[i] - '1' : -1;
+		if (a >= 0) sd_update(aux, sr, sc, i * 9 + a, 1);
+		if (a >= 0) ++hints;
+		cr[i] = cc[i] = -1, out[i] = _s[i];
 	}
-end_loop:
+	for (i = 0, dir = 1, out[81] = 0;;) {
+		while (i >= 0 && i < 81 - hints) {
+			if (dir == 1) {
+				int min = 10, n;
+				for (c = 0; c < 324; ++c) {
+					if (sc[c]) continue;
+					for (r2 = n = 0; r2 < 9; ++r2) n += (sr[aux->r[c][r2]] == 0);
+					if (n < min) min = n, cc[i] = c;
+				}
+				if (min == 0 || min == 10) {
+					cr[i--] = dir = -1;
+					continue;
+				}
+			} else sd_update(aux, sr, sc, aux->r[cc[i]][cr[i]], -1);
+			c = cc[i];
+			for (r2 = cr[i] + 1; r2 < 9; ++r2)
+				if (sr[aux->r[c][r2]] == 0) break;
+			if (r2 < 9) {
+				cr[i] = r2;
+				sd_update(aux, sr, sc, aux->r[c][cr[i]], 1);
+				++i; dir = 1;
+			} else cr[i--] = dir = -1;
+		}
+		if (i < 0) break;
+		for (j = 0; j < i; ++j) r = aux->r[cc[j]][cr[j]], out[r/9] = r%9 + '1';
+		puts(out);
+		--i; dir = -1;
+	}
 	return 0;
 }
 
 int main()
 {
-	sdaux_t *a = sd_prep();
+	sdaux_t *a = sd_genmat();
 	char buf[1024];
 	while (fgets(buf, 1024, stdin) != 0) {
 		if (strlen(buf) >= 81) {
