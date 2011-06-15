@@ -23,103 +23,145 @@
    SOFTWARE.
 */
 
+// This is a reimplementation of Guenter Stertenbrink's suexco.c. For more details, see:
+// http://magictour.free.fr/suexco.txt
+
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
 
-#define SET128(z, x) do { if ((x) >= 64) (z).b |= 1ull<<((x)-64); else (z).a |= 1ull<<(x); } while (0)
+/* For Sudoku, there are 9x9x9=729 possible choices (9 numbers to choose for
+   each cell in a 9x9 grid), and 4x9x9=324 constraints with each constraint
+   representing a set of choices that are mutually conflictive with each other.
+   The 324 constraints are classified into 4 categories:
 
-typedef struct { uint64_t a, b; } sd128_t; // 128-bit integer
-// enumerate all valid patterns for one integer
-sd128_t *sd_enumerate9()
+   1. row-column where each cell contains only one number
+   2. box-number where each number appears only once in one 3x3 box
+   3. row-number where each number appears only once in one row
+   4. col-number where each number appears only once in one column
+
+   Each category consists of 81 constraints. We number these constraints from 0
+   to 323. In this program, for example, constraint 0 requires that the (0,0)
+   cell contains only one number; constraint 81 requires that number 1 appears
+   only once in the upper-left 3x3 box; constraint 162 requires that number 1
+   appears only once in row 1; constraint 243 requires that number 1 appears
+   only once in column 1.
+   
+   Noting that a constraint is a subset of choices, we may represent a
+   constraint with a binary vector of 729 elements. Thus we have a 729x324
+   binary matrix M with M(r,c)=1 indicating the constraint c involves choice r.
+   Solving a Sudoku is reduced to finding a subset of choices such that no
+   choices are present in the same constaint. This is equivalent to finding the
+   minimal subset of choices intersecting all constraints, a minimum hitting
+   set problem or a eqivalence of the exact cover problem.
+
+   The 729x324 binary matrix is a sparse matrix, with each row containing 4
+   non-zero elements and each column 9 non-zero elements. In practical
+   implementation, we store the coordinate of non-zero elements instead of
+   the binary matrix itself. We use a binary row vector to indicate the
+   constraints that have not been used and use a column vector to keep the
+   times a choice has been forbidden. When we set a choice, we will use up
+   4 constraints and forbid other choices in the 4 constraints. When we make
+`  wrong choices, we will find an unused constraint with all choices forbidden,
+   in which case, we have to backtrack to make new choices. Once we understand
+   what the 729x324 matrix represents, the backtracking algorithm itself is
+   easy.
+ */
+
+// the sparse representation of the binary matrix
+typedef struct {
+	uint16_t r[324][9]; // M(r[c][i], c) is a non-zero element
+	uint16_t c[729][4]; // M(r, c[r][j]) is a non-zero element
+} sdaux_t;
+
+// generate the sparse representation of the binary matrix
+sdaux_t *sd_genmat()
 {
-	int8_t pos2box[81], mask_box[9], mask_col[9];
-	int i, j, c, p[9];
-	sd128_t *e;
-	e = calloc(46656, 16);
-	for (i = 0; i < 81; ++i) pos2box[i] = i/9/3*3 + i%9/3; // translate position to the box index
-	for (i = 0; i < 9; ++i) mask_box[i] = mask_col[i] = 0, p[i] = -1; // initialization
-	for (i = c = 0;; ++c) { // each iteration generates a valid pattern
-		while (i >= 0 && i < 9) { // loop until found one pattern or found no pattern
-			int i9 = 9 * i;
-			if (p[i] >= 0) mask_col[p[i]] = mask_box[pos2box[i9+p[i]]] = 0; // reset the mask at row i
-			for (j = p[i] + 1; j < 9; ++j) // search for a valid position
-				if (!mask_box[pos2box[i9 + j]] && !mask_col[j]) break; // stop if found
-			if (j < 9) mask_col[j] = mask_box[pos2box[9*i+j]] = 1, p[i++] = j; // found a valid one
-			else p[i--] = -1; // backtrack
-		}
-		if (i-- < 0) break; // no valid patterns any more
-		for (j = 0; j < 9; ++j) { // write the pattern
-			int x = 9 * j + p[j];
-			SET128(e[c], x); // set the bit of e[c] at x
-		}
-	}
-	return e;
+	sdaux_t *a;
+	int i, j, k, r, c, c2;
+	int8_t nr[324];
+	a = calloc(1, sizeof(sdaux_t));
+	for (i = r = 0; i < 9; ++i) // generate c[729][4]
+		for (j = 0; j < 9; ++j)
+			for (k = 0; k < 9; ++k) // this "9" means each cell has 9 possible numbers
+				a->c[r][0] = 9 * i + j,                  // row-column constraint
+				a->c[r][1] = (i/3*3 + j/3) * 9 + k + 81, // box-number constraint
+				a->c[r][2] = 9 * i + k + 162,            // row-number constraint
+				a->c[r][3] = 9 * j + k + 243,            // col-number constraint
+				++r;
+	for (c = 0; c < 324; ++c) nr[c] = 0;
+	for (r = 0; r < 729; ++r) // generate r[][] from c[][]
+		for (c2 = 0; c2 < 4; ++c2)
+			k = a->c[r][c2], a->r[k][nr[k]++] = r;
+	return a;
 }
-// solve Sudoku for s 
-int sd_solve(const sd128_t *e, const char *s)
+// update the state vectors when we pick up choice r; v=1 for setting choice; v=-1 for reverting
+inline void sd_update(const sdaux_t *aux, int16_t sr[729], int16_t sc[324], int r, int v)
 {
-	int i, j, k, p[9], n[9];
-	sd128_t x, y, *z[9];
-	for (i = 0; i < 9; ++i) { // generate all possible patterns for each number
-		int max = 0;
-		z[i] = 0; n[i] = 0; p[i] = -1;
-		x.a = x.b = y.a = y.b = 0; // x keeps the pattern of the current number; y the other numbers
-		for (j = 0; j < 81; ++j) { // set x and y
-			if (s[j] < '1' || s[j] > '9') continue; // skip if not [1,9]
-			if ((int)s[j] - '1' == i) SET128(x, j); // if the current number, set x
-			else SET128(y, j); // if other numbers, set y
-		}
-		for (j = 0; j < 46656; ++j) { // traverse all possible patterns
-			const sd128_t *ej = e + j;
-			if ((ej->a&x.a) == x.a && (ej->b&x.b) == x.b && !(ej->a&y.a) && !(ej->b&y.b)) {
-				if (n[i] == max) { // enlarge
-					max = max? max<<1 : 256;
-					z[i] = realloc(z[i], max * 16);
+	int c2;
+	for (c2 = 0; c2 < 4; ++c2) {
+		int r2, c = aux->c[r][c2];
+		sc[c] += v;
+		for (r2 = 0; r2 < 9; ++r2) sr[aux->r[c][r2]] += v;
+	}
+}
+// solve a Sudoku; _s is the standard dot/number representation
+int sd_solve(const sdaux_t *aux, const char *_s)
+{
+	int i, j, r, c, r2, dir, hints = 0; // dir=1: forward; dir=-1: backtrack
+	int16_t sr[729], sc[324]; // sr[r]/sc[c]: state of row r/col c - # constraints applied
+	int16_t cr[81], cc[81];   // cr/cc[i]: row/col chosen at step i
+	char out[82];
+	for (r = 0; r < 729; ++r) sr[r] = 0;
+	for (c = 0; c < 324; ++c) sc[c] = 0;
+	for (i = 0; i < 81; ++i) {
+		int a = _s[i] >= '1' && _s[i] <= '9'? _s[i] - '1' : -1; // number from -1 to 8
+		if (a >= 0) sd_update(aux, sr, sc, i * 9 + a, 1); // set the choice
+		if (a >= 0) ++hints; // count the number of hints
+		cr[i] = cc[i] = -1, out[i] = _s[i];
+	}
+	for (i = 0, dir = 1, out[81] = 0;;) {
+		while (i >= 0 && i < 81 - hints) { // maximum 81-hints steps
+			if (dir == 1) {
+				int min = 10, n;
+				for (c = 0; c < 324; ++c) {
+					const uint16_t *p;
+					if (sc[c]) continue; // skip if the constraint has been used
+					for (r2 = n = 0, p = aux->r[c]; r2 < 9; ++r2)
+						if (sr[p[r2]] == 0) ++n; // 50% of CPU time goes to this line
+					if (n < min) min = n, cc[i] = c; // choose the most constrained constraint
+					if (min <= 1) break; // this is for acceleration; slower without this line
 				}
-				z[i][n[i]++] = *ej; // keep the pattern
+				if (min == 0 || min == 10) cr[i--] = dir = -1; // backtrack
 			}
+			c = cc[i];
+			if (dir == -1) sd_update(aux, sr, sc, aux->r[c][cr[i]], -1); // revert the choice
+			for (r2 = cr[i] + 1; r2 < 9; ++r2) // search for the choice to make
+				if (sr[aux->r[c][r2]] == 0) break; // found if the state equals 0
+			if (r2 < 9) {
+				sd_update(aux, sr, sc, aux->r[c][r2], 1); // set the choice
+				cr[i++] = r2; dir = 1; // moving forward
+			} else cr[i--] = dir = -1; // backtrack
 		}
-		n[i] = n[i]<<8 | i; // this is for sorting
-	}
-	for (i = 1; i < 9; ++i) // insertion sort; start from numbers with fewer patterns
-		for (j = i; j > 0 && n[j] < n[j-1]; --j)
-			k = n[j], n[j] = n[j-1], n[j-1] = k;
-	x.a = x.b = 0; // x is going to be the mask up to position i
-	for (i = 0;;) {
-		char out[82];
-		while (i >= 0 && i < 9) {
-			int ni = n[i]>>8; // this is the number of patterns
-			sd128_t *zi = z[n[i]&0xff]; // n[i]&0xff is the number
-			if (p[i] >= 0) x.a &= ~zi[p[i]].a, x.b &= ~zi[p[i]].b;
-			for (j = p[i] + 1; j < ni; ++j) // search for a compatible pattern
-				if (!(x.a&zi[j].a) && !(x.b&zi[j].b)) break;
-			if (j < ni) x.a |= zi[j].a, x.b |= zi[j].b, p[i++] = j; // found; move to the next
-			else p[i--] = -1; // backtrack
-		}
-		if (i-- < 0) break; // no further solutions
-		for (j = 0; j < 9; ++j) { // write out the solution
-			for (k = 0; k < 64; ++k) if (z[n[j]&0xff][p[j]].a>>k&1) out[k] = (n[j]&0xff) + '1';
-			for (k = 0; k < 81 - 64; ++k) if (z[n[j]&0xff][p[j]].b>>k&1) out[k+64] = (n[j]&0xff) + '1';
-		}
-		out[81] = 0;
+		if (i < 0) break;
+		for (j = 0; j < i; ++j) r = aux->r[cc[j]][cr[j]], out[r/9] = r%9 + '1'; // print
 		puts(out);
+		--i; dir = -1; // backtrack
 	}
-	for (i = 0; i < 9; ++i) free(z[i]);
 	return 0;
 }
 
 int main()
 {
+	sdaux_t *a = sd_genmat();
 	char buf[1024];
-	sd128_t *e = sd_enumerate9();
 	while (fgets(buf, 1024, stdin) != 0) {
 		if (strlen(buf) >= 81) {
-			sd_solve(e, buf);
+			sd_solve(a, buf);
 			putchar('\n');
 		}
 	}
-	free(e);
+	free(a);
 	return 0;
 }
