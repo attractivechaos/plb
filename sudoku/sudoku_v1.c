@@ -97,7 +97,7 @@ sdaux_t *sd_genmat()
 	return a;
 }
 // update the state vectors when we pick up choice r; v=1 for setting choice; v=-1 for reverting
-inline void sd_update(const sdaux_t *aux, int8_t sr[729], int8_t sc[324], int r, int v)
+inline void sd_update(const sdaux_t *aux, int16_t sr[729], int8_t sc[324], int r, int v)
 {
 	int c2;
 	for (c2 = 0; c2 < 4; ++c2) {
@@ -110,8 +110,8 @@ inline void sd_update(const sdaux_t *aux, int8_t sr[729], int8_t sc[324], int r,
 int sd_solve(const sdaux_t *aux, const char *_s)
 {
 	int i, j, r, c, r2, dir, c0, hints = 0; // dir=1: forward; dir=-1: backtrack
-	int8_t sr[729], sc[324]; // sr[r]/sc[c]: state of row r/col c - # constraints applied
-	int16_t cr[81], cc[81];   // cr/cc[i]: row/col chosen at step i
+	int8_t sc[324], cr[81];
+	int16_t cc[81], sr[729];
 	char out[82];
 	for (r = 0; r < 729; ++r) sr[r] = 0;
 	for (c = 0; c < 324; ++c) sc[c] = 0;
