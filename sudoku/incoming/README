@@ -32,7 +32,7 @@ Compiler: gcc-4.2.1 for OS X (-O2)
  fast_solv_9r2         4.1       3.6   -s2
  fsss                  0.9       0.7   *
  JSolve                0.9       0.7   N/A
- ksudoku               5.6       4.7   N/A
+ kudoku                4.8       4.0   N/A
  sudocoo               1.9      92.1   -s2
  suexk                10.6       9.4   s2
  zerodoku_v2           2.5       2.7   -s2
