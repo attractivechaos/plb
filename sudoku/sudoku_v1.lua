@@ -39,7 +39,7 @@ function sd_solve(R, C, s)
 			if dir == 1 then
 				local min = 10
 				for j = 0, 323 do
-					local c = math.fmod(j + c0, 324)
+					local c = j + c0 < 324 and j + c0 or j + c0 - 324
 					if sc[c] == 0 then
 						local n, p = 0, R[c]
 						for r2 = 1, 9 do

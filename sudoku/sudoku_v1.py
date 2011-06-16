@@ -37,7 +37,8 @@ def sd_solve(R, C, s):
 			if d == 1:
 				m = 10
 				for j in range(324):
-					c = (j + c0) % 324
+					if j + c0 < 324: c = j + c0
+					else: c = j + c0 - 324
 					if sc[c] != 0: continue
 					n = 0
 					for r in R[c]:
