@@ -61,7 +61,7 @@ function sd_solve(R, C, _s) {
 				var min = 10, n;
 				for (var j = 0; j < 324; ++j) {
 					var p;
-					c = (j + c0) % 324;
+					c = j + c0 < 324? j + c0 : j + c0 - 324
 					if (sc[c]) continue;
 					for (r2 = n = 0, p = R[c]; r2 < 9; ++r2)
 						if (sr[p[r2]] == 0) ++n;
