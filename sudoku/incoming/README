@@ -6,6 +6,7 @@ fsss.cc         http://sites.google.com/site/dobrichev/fsss/     Mladen Dobriche
 JSolve*         http://www.enjoysudoku.com/JSolve12.zip          Jason T. Linhart's solver (12)
 sudocoo.c       http://www2.research.att.com/~gsf/               Glenn Fowler's sudocoo
 sudoku-aa+dlx   http://users.tkk.fi/~aajanki/sudoku/index.html   Antti Ajanki's DLX solver (Python)
+sudoku-pn.py    http://norvig.com/sudoku.py                      Peter Norvig's solver (Python)
 suexk.c         http://magictour.free.fr/sudoku.htm              Guenter Stertenbrink's suexk
 zerodoku_v2.c   http://www.setbb.com/sudoku/viewtopic.php?t=1663 Jim Schirle's zerodoku (v2)
 
