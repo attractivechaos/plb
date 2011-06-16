@@ -28,7 +28,7 @@ function sd_solve(R, C, _s) {
 		var a = _s.charAt(i) >= '1' && _s.charAt(i) <= '9'? _s.charCodeAt(i) - 49 : -1;
 		if (a >= 0) sd_update(R, C, sr, sc, i * 9 + a, 1);
 		if (a >= 0) ++hints;
-		cr[i] = cc[i] = -1, out[i] = a;
+		cr[i] = cc[i] = -1, out[i] = a + 1;
 	}
 	for (i = c0 = 0, dir = 1;;) {
 		while (i >= 0 && i < 81 - hints) {
