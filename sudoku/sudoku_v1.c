@@ -97,20 +97,20 @@ sdaux_t *sd_genmat()
 	return a;
 }
 // update the state vectors when we pick up choice r; v=1 for setting choice; v=-1 for reverting
-inline void sd_update(const sdaux_t *aux, int16_t sr[729], int16_t sc[324], int r, int v)
+inline void sd_update(const sdaux_t *aux, int8_t sr[729], int8_t sc[324], int r, int v)
 {
 	int c2;
 	for (c2 = 0; c2 < 4; ++c2) {
 		int r2, c = aux->c[r][c2];
 		sc[c] += v;
-		for (r2 = 0; r2 < 9; ++r2) sr[aux->r[c][r2]] += v;
+		for (r2 = 0; r2 < 9; ++r2) sr[aux->r[c][r2]] += v; // 15% of CPU time
 	}
 }
 // solve a Sudoku; _s is the standard dot/number representation
 int sd_solve(const sdaux_t *aux, const char *_s)
 {
 	int i, j, r, c, r2, dir, c0, hints = 0; // dir=1: forward; dir=-1: backtrack
-	int16_t sr[729], sc[324]; // sr[r]/sc[c]: state of row r/col c - # constraints applied
+	int8_t sr[729], sc[324]; // sr[r]/sc[c]: state of row r/col c - # constraints applied
 	int16_t cr[81], cc[81];   // cr/cc[i]: row/col chosen at step i
 	char out[82];
 	for (r = 0; r < 729; ++r) sr[r] = 0;
@@ -125,12 +125,12 @@ int sd_solve(const sdaux_t *aux, const char *_s)
 		while (i >= 0 && i < 81 - hints) { // maximum 81-hints steps
 			if (dir == 1) {
 				int j, min = 10, n;
-				for (j = 0; j < 324; ++j) {
+				for (j = 0; j < 324; ++j) { // 75% of CPU time goes to this block
 					const uint16_t *p;
 					c = j + c0 < 324? j + c0 : j + c0 - 324; // only explore cols not computed before
 					if (sc[c]) continue; // skip if the constraint has been used
 					for (r2 = n = 0, p = aux->r[c]; r2 < 9; ++r2)
-						if (sr[p[r2]] == 0) ++n; // 25% of CPU time goes to this line
+						if (sr[p[r2]] == 0) ++n; // 30% of CPU time goes to this line
 					if (n < min) min = n, cc[i] = c, c0 = c + 1; // choose the top constraint
 					if (n <= 1) break; // this is for acceleration; slower without this line
 				}
