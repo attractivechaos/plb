@@ -5,11 +5,11 @@ fast_solv_9r2.c http://www.setbb.com/sudoku/viewtopic.php?t=1586 Ignacio Zelaya'
 fsss.cc         http://sites.google.com/site/dobrichev/fsss/     Mladen Dobrichev's solver (8.6)
 JSolve*         http://www.enjoysudoku.com/JSolve12.zip          Jason T. Linhart's solver (12)
 kudoku.c        ../sudoku_v1.c                                   Attractive Chaos' solver
-kudoku.lua      ../sudoku_v1.lua (luajit-beta7)                  Attractive Chaos' solver
 sudocoo.c       http://www2.research.att.com/~gsf/               Glenn Fowler's sudocoo
 sudoku-aa+dlx   http://users.tkk.fi/~aajanki/sudoku/index.html   Antti Ajanki's DLX solver (Python)
 sudoku-pd.rb    https://gist.github.com/1013790                  Preetam D'Souza's Ruby solver
 sudoku-pn.py    http://norvig.com/sudoku.py                      Peter Norvig's solver (Python)
+sudokusolver.rb http://rubyforge.org/frs/?group_id=3447          Martin-Louis Bright's solver (Ruby-1.8)
 suexk.c         http://magictour.free.fr/sudoku.htm              Guenter Stertenbrink's suexk
 zerodoku_v2.c   http://www.setbb.com/sudoku/viewtopic.php?t=1663 Jim Schirle's zerodoku (v2)
 
@@ -35,8 +35,7 @@ Compiler: gcc-4.2.1 for OS X (-O3)
  fast_solv_9r2         4.0       3.5   -s2
  fsss                  0.9       0.6   *
  JSolve                0.8       0.6   N/A (multi)
- kudoku                4.2       3.5   N/A (all)
- kudoku-lua           27.4      24.7   N/A (all)
+ kudoku                3.0       2.8   N/A (all)
  sudocoo               2.0      96.1   -s2
  suexk                10.4       9.3   s2
  zerodoku_v2           2.2       2.4   -s2
