@@ -19,34 +19,11 @@ def sd_genmat()
 end
 
 def sd_update(mr, mc, sr, sc, r, v)
-	min, min_c = 10, 0
-	(0...4).each do |c2| sc[mc[r][c2]] += v<<7 end
 	(0...4).each do |c2|
 		c = mc[r][c2]
-		if v > 0 then
-			(0...9).each do |r2|
-				rr = mr[c][r2]
-				sr[rr] += + 1
-				if sr[rr] == 1 then
-					(0...4).each do |cc2|
-						cc = mc[rr][cc2]
-						sc[cc] -= 1
-						if sc[cc] < min then min, min_c = sc[cc], cc end
-					end
-				end
-			end
-		else
-			(0...9).each do |r2|
-				rr = mr[c][r2]
-				sr[rr] -= 1
-				if sr[rr] == 0 then
-					p = mc[rr]
-					sc[p[0]] += 1; sc[p[1]] += 1; sc[p[2]] += 1; sc[p[3]] += 1
-				end
-			end
-		end
+		sc[c] += v
+		mr[c].each do |p| sr[p] += v end
 	end
-	return min, min_c
 end
 
 def sd_solve(mr, mc, s)
@@ -55,18 +32,19 @@ def sd_solve(mr, mc, s)
 		a = (s[i].chr >= '1' and s[i].chr <= '9')? s[i].ord - 49 : -1
 		if a >= 0 then sd_update(mr, mc, sr, sc, i * 9 + a, 1); hints += 1 end
 	end
-	cr, cc = Array.new(81) { -1 }, Array.new(81) { 0 }
-	i, min, dir = 0, 10, 1
+	cr, cc = Array.new(81) { -1 }, Array.new(81) { -1 }
+	i, c0, dir = 0, 0, 1
 	loop do
 		while i >= 0 and i < 81 - hints do
 			if dir == 1 then
-				if min > 1 then
-					(0...324).each do |c|
-						if sc[c] < min then
-							min, cc[i] = sc[c], c
-							if min < 2 then break end
-						end
-					end
+				min = 10
+				(0...324).each do |j|
+					c = j + c0 < 324? j + c0 : j + c0 - 324
+					if sc[c] != 0 then next end
+					n = 0
+					mr[c].each do |p| if sr[p] == 0 then n += 1 end end
+					if n < min then min, cc[i], c0 = n, c, c + 1 end
+					if n <= 1 then break end
 				end
 				if min == 0 or min == 10 then cr[i], dir, i = -1, -1, i - 1 end
 			end
@@ -77,7 +55,7 @@ def sd_solve(mr, mc, s)
 				if sr[mr[c][r2]] == 0 then r2_ = r2; break end
 			end
 			if r2_ < 9 then
-				min, cc[i+1] = sd_update(mr, mc, sr, sc, mr[c][r2_], 1)
+				sd_update(mr, mc, sr, sc, mr[c][r2_], 1)
 				cr[i], dir, i = r2_, 1, i + 1
 			else cr[i], dir, i = -1, -1, i - 1 end
 		end
