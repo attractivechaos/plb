@@ -15,38 +15,62 @@ function sd_genmat()
 	return R, C
 end
 
-function sd_update(R, C, sr, sc, r, v)
-	for c2 = 1, 4 do
-		local c = C[r][c2]
-		sc[c] = sc[c] + v
-		for r2 = 1, 9 do sr[R[c][r2]] = sr[R[c][r2]] + v end
-	end
-end
-
 function sd_solve(R, C, s)
+
+	local function sd_update(R, C, sr, sc, r, v)
+		local min, min_c = 10, 0
+		for c2 = 1, 4 do
+			if v > 0 then sc[C[r][c2]] = sc[C[r][c2]] + 128
+			else sc[C[r][c2]] = sc[C[r][c2]] - 128 end
+		end
+		for c2 = 1, 4 do
+			local c = C[r][c2]
+			if v > 0 then
+				for r2 = 1, 9 do
+					local rr = R[c][r2]
+					sr[rr] = sr[rr] + 1
+					if sr[rr] == 1 then
+						for cc2 = 1, 4 do
+							local cc = C[rr][cc2]
+							sc[cc] = sc[cc] - 1
+							if sc[cc] < min then min, min_c = sc[cc], cc end
+						end
+					end
+				end
+			else
+				for r2 = 1, 9 do
+					local rr = R[c][r2]
+					sr[rr] = sr[rr] - 1
+					if sr[rr] == 0 then
+						local p = C[rr]
+						sc[p[1]], sc[p[2]], sc[p[3]], sc[p[4]] = sc[p[1]]+1, sc[p[2]]+1, sc[p[3]]+1, sc[p[4]]+1
+					end
+				end
+			end
+		end
+		local x = 0; for c = 0, 323 do x = x + sc[c] end
+		return min, min_c
+	end
+
 	local sr, sc, cr, cc, hints = {}, {}, {}, {}, 0
 	for r = 0, 728 do sr[r] = 0 end
-	for c = 0, 323 do sc[c] = 0 end
+	for c = 0, 323 do sc[c] = 9 end
 	for i = 0, 80 do
 		local t = s:byte(i+1)
 		local a = t >= 49 and t <= 57 and t - 49 or -1
 		if a >= 0 then sd_update(R, C, sr, sc, i * 9 + a, 1); hints = hints + 1 end
-		cr[i], cc[i] = 0, -1
+		cr[i], cc[i] = 0, 0
 	end
-	local i, c0, dir, ret = 0, 0, 1, {}
+	local i, min, dir, ret = 0, 10, 1, {}
 	while true do
 		while i >= 0 and i < 81 - hints do
 			if dir == 1 then
-				local min = 10
-				for j = 0, 323 do
-					local c = j + c0 < 324 and j + c0 or j + c0 - 324
-					if sc[c] == 0 then
-						local n, p = 0, R[c]
-						for r2 = 1, 9 do
-							if sr[p[r2]] == 0 then n = n + 1 end
+				if min > 1 then
+					for c = 0, 323 do
+						if sc[c] < min then
+							min, cc[i] = sc[c], c
+							if min < 2 then break end
 						end
-						if n < min then min, cc[i], c0 = n, c, c + 1 end
-						if min <= 1 then break end
 					end
 				end
 				if min == 0 or min == 10 then cr[i], dir, i = 0, -1, i - 1 end
@@ -57,7 +81,7 @@ function sd_solve(R, C, s)
 				if sr[R[c][r2]] == 0 then r2_ = r2; break end
 			end
 			if r2_ < 10 then
-				sd_update(R, C, sr, sc, R[c][r2_], 1)
+				min, cc[i+1] = sd_update(R, C, sr, sc, R[c][r2_], 1)
 				cr[i], dir, i = r2_, 1, i + 1
 			else cr[i], dir, i = 0, -1, i - 1 end
 		end
