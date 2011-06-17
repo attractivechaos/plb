@@ -23,8 +23,8 @@
    SOFTWARE.
 */
 
-// This is a reimplementation of Guenter Stertenbrink's suexco.c. For more details, see:
-// http://magictour.free.fr/suexco.txt
+// This file implements an improved algorithm of Guenter Stertenbrink's suexco.c
+// (http://magictour.free.fr/suexco.txt).
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -61,12 +61,19 @@
    implementation, we store the coordinate of non-zero elements instead of
    the binary matrix itself. We use a binary row vector to indicate the
    constraints that have not been used and use a column vector to keep the
-   times a choice has been forbidden. When we set a choice, we will use up
-   4 constraints and forbid other choices in the 4 constraints. When we make
-`  wrong choices, we will find an unused constraint with all choices forbidden,
-   in which case, we have to backtrack to make new choices. Once we understand
-   what the 729x324 matrix represents, the backtracking algorithm itself is
-   easy.
+   number of times a choice has been forbidden. When we set a choice, we will
+   use up 4 constraints and forbid other choices in the 4 constraints. When we
+   make wrong choices, we will find an unused constraint with all choices
+   forbidden, in which case, we have to backtrack to make new choices. Once we
+   understand what the 729x324 matrix represents, the backtracking algorithm
+   itself is easy.
+
+   A major difference between the algorithm implemented here and Guenter
+   Stertenbrink's suexco.c lies in how to count the number of the available
+   choices for each constraint. Suexco.c computes the count with a loop, while
+   the algorithm here keeps the count in an array. The latter is a little more
+   complex to implement as we have to keep the counts synchronized all the time,
+   but it is 50-100% faster, depending on the input.
  */
 
 // the sparse representation of the binary matrix
@@ -79,7 +86,7 @@ typedef struct {
 sdaux_t *sd_genmat()
 {
 	sdaux_t *a;
-	int i, j, k, r, c, c2;
+	int i, j, k, r, c, c2, r2;
 	int8_t nr[324];
 	a = calloc(1, sizeof(sdaux_t));
 	for (i = r = 0; i < 9; ++i) // generate c[729][4]
@@ -97,42 +104,60 @@ sdaux_t *sd_genmat()
 	return a;
 }
 // update the state vectors when we pick up choice r; v=1 for setting choice; v=-1 for reverting
-inline void sd_update(const sdaux_t *aux, int8_t sr[729], int8_t sc[324], int r, int v)
+inline int sd_update(const sdaux_t *aux, int8_t sr[729], uint8_t sc[324], int r, int v)
 {
-	int c2;
-	for (c2 = 0; c2 < 4; ++c2) {
-		int r2, c = aux->c[r][c2];
-		sc[c] += v;
-		for (r2 = 0; r2 < 9; ++r2) sr[aux->r[c][r2]] += v; // 15% of CPU time
+	int c2, min = 10, min_c = 0;
+	for (c2 = 0; c2 < 4; ++c2) // update the column status bit (the highest bit)
+		if (v > 0) sc[aux->c[r][c2]] |= 0x80;
+		else sc[aux->c[r][c2]] &= 0x7f;
+	for (c2 = 0; c2 < 4; ++c2) { // update # available choices
+		int r2, rr, cc2, c = aux->c[r][c2];
+		if (v > 0) { // move forward
+			for (r2 = 0; r2 < 9; ++r2) {
+				if (sr[rr = aux->r[c][r2]]++ != 0) continue; // update the row status
+				for (cc2 = 0; cc2 < 4; ++cc2) {
+					int cc = aux->c[rr][cc2];
+					if (--sc[cc] < min) // update # allowed choices
+						min = sc[cc], min_c = cc; // register the minimum number
+				}
+			}
+		} else { // revert
+			const uint16_t *p;
+			for (r2 = 0; r2 < 9; ++r2) {
+				if (--sr[rr = aux->r[c][r2]] != 0) continue; // update the row status
+				p = aux->c[rr]; ++sc[p[0]]; ++sc[p[1]]; ++sc[p[2]]; ++sc[p[3]]; // update the count array
+			}
+		}
 	}
+	return min<<16 | min_c; // return the col that has been modified and with the minimal available choices
 }
 // solve a Sudoku; _s is the standard dot/number representation
 int sd_solve(const sdaux_t *aux, const char *_s)
 {
-	int i, j, r, c, r2, dir, c0, hints = 0; // dir=1: forward; dir=-1: backtrack
-	int8_t sc[324], sr[729], cr[81];
-	int16_t cc[81];
+	int i, j, r, c, r2, dir, cand, n = 0, min, hints = 0; // dir=1: forward; dir=-1: backtrack
+	int8_t sr[729], cr[81]; // sr[r]: # times the row is forbidden by others; cr[i]: row chosen at step i
+	uint8_t sc[324]; // bit 1-7: # allowed choices; bit 8: the constraint has been used or not
+	int16_t cc[81]; // cc[i]: col chosen at step i
 	char out[82];
-	for (r = 0; r < 729; ++r) sr[r] = 0;
-	for (c = 0; c < 324; ++c) sc[c] = 0;
+	for (r = 0; r < 729; ++r) sr[r] = 0; // no row is forbidden
+	for (c = 0; c < 324; ++c) sc[c] = 0<<7|9; // 9 allowed choices; no constraint has been used
 	for (i = 0; i < 81; ++i) {
 		int a = _s[i] >= '1' && _s[i] <= '9'? _s[i] - '1' : -1; // number from -1 to 8
 		if (a >= 0) sd_update(aux, sr, sc, i * 9 + a, 1); // set the choice
 		if (a >= 0) ++hints; // count the number of hints
 		cr[i] = cc[i] = -1, out[i] = _s[i];
 	}
-	for (i = c0 = 0, dir = 1, out[81] = 0;;) {
+	for (i = 0, dir = 1, cand = 10<<16|0, out[81] = 0;;) {
 		while (i >= 0 && i < 81 - hints) { // maximum 81-hints steps
 			if (dir == 1) {
-				int j, min = 10, n;
-				for (j = 0; j < 324; ++j) { // 75% of CPU time goes to this block
-					const uint16_t *p;
-					c = j + c0 < 324? j + c0 : j + c0 - 324; // only explore cols not computed before
-					if (sc[c]) continue; // skip if the constraint has been used
-					for (r2 = n = 0, p = aux->r[c]; r2 < 9; ++r2)
-						if (sr[p[r2]] == 0) ++n; // 30% of CPU time goes to this line
-					if (n < min) min = n, cc[i] = c, c0 = c + 1; // choose the top constraint
-					if (n <= 1) break; // this is for acceleration; slower without this line
+				min = cand>>16, cc[i] = cand&0xffff;
+				if (min > 1) {
+					for (c = 0; c < 324; ++c) {
+						if (sc[c] < min) {
+							min = sc[c], cc[i] = c; // choose the top constraint
+							if (min <= 1) break; // this is for acceleration; slower without this line
+						}
+					}
 				}
 				if (min == 0 || min == 10) cr[i--] = dir = -1; // backtrack
 			}
@@ -141,16 +166,16 @@ int sd_solve(const sdaux_t *aux, const char *_s)
 			for (r2 = cr[i] + 1; r2 < 9; ++r2) // search for the choice to make
 				if (sr[aux->r[c][r2]] == 0) break; // found if the state equals 0
 			if (r2 < 9) {
-				sd_update(aux, sr, sc, aux->r[c][r2], 1); // set the choice
+				cand = sd_update(aux, sr, sc, aux->r[c][r2], 1); // set the choice
 				cr[i++] = r2; dir = 1; // moving forward
 			} else cr[i--] = dir = -1; // backtrack
 		}
 		if (i < 0) break;
 		for (j = 0; j < i; ++j) r = aux->r[cc[j]][cr[j]], out[r/9] = r%9 + '1'; // print
 		puts(out);
-		--i; dir = -1; // backtrack
+		++n; --i; dir = -1; // backtrack
 	}
-	return 0;
+	return n; // return the number of solutions
 }
 
 int main()
