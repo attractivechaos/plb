@@ -12,32 +12,15 @@ function sd_genmat() {
 }
 
 function sd_update(R, C, sr, sc, r, v) {
-	var min = 10, min_c = 0;
-	for (var c2 = 0; c2 < 4; ++c2) sc[C[r][c2]] += v<<7;
 	for (var c2 = 0; c2 < 4; ++c2) {
-		var r2, rr, cc2, c = C[r][c2];
-		if (v > 0) {
-			for (r2 = 0; r2 < 9; ++r2) {
-				if (sr[rr = R[c][r2]]++ != 0) continue;
-				for (cc2 = 0; cc2 < 4; ++cc2) {
-					var cc = C[rr][cc2];
-					if (--sc[cc] < min)
-						min = sc[cc], min_c = cc;
-				}
-			}
-		} else { // revert
-			for (r2 = 0; r2 < 9; ++r2) {
-				if (--sr[rr = R[c][r2]] != 0) continue;
-				var p = C[rr]
-				++sc[p[0]]; ++sc[p[1]]; ++sc[p[2]]; ++sc[p[3]];
-			}
-		}
+		var c = C[r][c2];
+		sc[c] += v;
+		for (var r2 = 0; r2 < 9; ++r2) sr[R[c][r2]] += v;
 	}
-	return min<<16 | min_c; // return the col that has been modified and with the minimal available choices
 }
 
 function sd_solve(R, C, _s) {
-	var i, j, r, c, r2, min, cand, dir, hints = 0;
+	var i, j, r, c, r2, dir, c0, hints = 0;
 	var sr = [], sc = [], cr = [], cc = [], out = [], ret = [];
 	for (r = 0; r < 729; ++r) sr[r] = 0;
 	for (c = 0; c < 324; ++c) sc[c] = 0;
@@ -47,17 +30,18 @@ function sd_solve(R, C, _s) {
 		if (a >= 0) ++hints;
 		cr[i] = cc[i] = -1, out[i] = a + 1;
 	}
-	for (i = 0, dir = 1, cand = 10<<16|0;;) {
+	for (i = c0 = 0, dir = 1;;) {
 		while (i >= 0 && i < 81 - hints) {
 			if (dir == 1) {
-				min = cand>>16, cc[i] = cand&0xffff
-				if (min > 1) {
-					for (c = 0; c < 324; ++c) {
-						if (sc[c] < min) {
-							min = sc[c], cc[i] = c;
-							if (min <= 1) break;
-						}
-					}
+				var min = 10, n;
+				for (var j = 0; j < 324; ++j) {
+					var p;
+					c = j + c0 < 324? j + c0 : j + c0 - 324
+					if (sc[c]) continue;
+					for (r2 = n = 0, p = R[c]; r2 < 9; ++r2)
+						if (sr[p[r2]] == 0) ++n;
+					if (n < min) min = n, cc[i] = c, c0 = c + 1;
+					if (min <= 1) break;
 				}
 				if (min == 0 || min == 10) cr[i--] = dir = -1;
 			}
@@ -66,7 +50,7 @@ function sd_solve(R, C, _s) {
 			for (r2 = cr[i] + 1; r2 < 9; ++r2)
 				if (sr[R[c][r2]] == 0) break;
 			if (r2 < 9) {
-				cand = sd_update(R, C, sr, sc, R[c][r2], 1);
+				sd_update(R, C, sr, sc, R[c][r2], 1);
 				cr[i++] = r2; dir = 1;
 			} else cr[i--] = dir = -1;
 		}
