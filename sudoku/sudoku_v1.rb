@@ -20,7 +20,10 @@ end
 
 def sd_update(mr, mc, sr, sc, r, v)
 	min, min_c = 10, 0
-	(0...4).each do |c2| sc[mc[r][c2]] += v<<7 end
+	(0...4).each do |c2|
+		if v > 0 then sc[mc[r][c2]] += 128
+		else sc[mc[r][c2]] -= 128 end
+	end
 	(0...4).each do |c2|
 		c = mc[r][c2]
 		if v > 0 then
@@ -28,11 +31,12 @@ def sd_update(mr, mc, sr, sc, r, v)
 				rr = mr[c][r2]
 				sr[rr] += + 1
 				if sr[rr] == 1 then
-					(0...4).each do |cc2|
-						cc = mc[rr][cc2]
-						sc[cc] -= 1
-						if sc[cc] < min then min, min_c = sc[cc], cc end
-					end
+					p = mc[rr]
+					sc[p[0]] -= 1; sc[p[1]] -= 1; sc[p[2]] -= 1; sc[p[3]] -= 1
+					if sc[p[0]] < min then min, min_c = sc[p[0]], p[0] end
+					if sc[p[1]] < min then min, min_c = sc[p[1]], p[1] end
+					if sc[p[2]] < min then min, min_c = sc[p[2]], p[2] end
+					if sc[p[3]] < min then min, min_c = sc[p[3]], p[3] end
 				end
 			end
 		else
@@ -50,7 +54,7 @@ def sd_update(mr, mc, sr, sc, r, v)
 end
 
 def sd_solve(mr, mc, s)
-	ret, sr, sc, hints = [], Array.new(729) { 0 }, Array.new(324) { 0 }, 0
+	ret, sr, sc, hints = [], Array.new(729) { 0 }, Array.new(324) { 9 }, 0
 	(0...81).each do |i|
 		a = (s[i].chr >= '1' and s[i].chr <= '9')? s[i].ord - 49 : -1
 		if a >= 0 then sd_update(mr, mc, sr, sc, i * 9 + a, 1); hints += 1 end

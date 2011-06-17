@@ -40,7 +40,7 @@ function sd_solve(R, C, _s) {
 	var i, j, r, c, r2, min, cand, dir, hints = 0;
 	var sr = [], sc = [], cr = [], cc = [], out = [], ret = [];
 	for (r = 0; r < 729; ++r) sr[r] = 0;
-	for (c = 0; c < 324; ++c) sc[c] = 0;
+	for (c = 0; c < 324; ++c) sc[c] = 9;
 	for (i = 0; i < 81; ++i) {
 		var a = _s.charAt(i) >= '1' && _s.charAt(i) <= '9'? _s.charCodeAt(i) - 49 : -1;
 		if (a >= 0) sd_update(R, C, sr, sc, i * 9 + a, 1);
