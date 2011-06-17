@@ -24,7 +24,7 @@
 <table cellpadding="0" cellspacing="0" border="0" class="sortable">
 <tr></tr>
 <tr><th>sudoku:t<td>CPU time in seconds for solving 20x50 <a href="http://en.wikipedia.org/wiki/Sudoku">Sudokus</a>
-	(20 extremely hard Sudokus repeated 50 times) using an algorithm adapted from <a href="http://magictour.free.fr/sudoku.htm">suexco</a>. This
+	(<a href="https://github.com/attractivechaos/plb/blob/master/sudoku/sudoku.txt">20 extremely hard Sudokus</a> repeated 50 times) using an algorithm adapted from <a href="http://magictour.free.fr/sudoku.htm">suexco</a>. This
 	algorithm is not the fastest, but it is very easy to reimplement.
 	Note that "sudoku" and "matmul" evaluate the performance of the language itself. "Patmch" and "dict" below effectively evaluate the performance
 	of libraries.</tr>
@@ -71,10 +71,10 @@
 	<tr><th>Jython-2.5.2@JRE-1.6.0_25   <td>Python    <td>357.0<td>731.4<td>355.6<td> 43.2<td>125.0<td> 13.4<td>444.2</tr>
 	<tr><th>Shedskin-0.8@GCC-4.3.2      <td>Python    <td>6.8  <td>3.7  <td>50.4 <td>999.9<td>999.9<td>  9.6<td>317.5</tr>
 	<tr><th>R-2.13.0                    <td>R         <td>999.9<td>1736.3<td>57.2<td> 34.6<td> 47.7<td>999.9<td>999.9</tr>
-	<tr><th>JRuby-1.6.1@JRE-1.6.0_25    <td>Ruby      <td>999.9<td>238.2<td>342.5<td>  5.5<td> 23.1<td> 18.1<td>436.9</tr>
+	<tr><th>JRuby-1.6.1@JRE-1.6.0_25    <td>Ruby      <td>258.7<td>238.2<td>342.5<td>  5.5<td> 23.1<td> 18.1<td>436.9</tr>
 	<tr><th>IronRuby-1.1.1@Mono-2.10.1  <td>Ruby      <td>999.9<td>510.0<td>176.0<td> 25.5<td> 54.5<td> 39.6<td>367.2</tr>
-	<tr><th>Ruby-1.9.2p180              <td>Ruby      <td>999.9<td>628.4<td>196.6<td> 15.4<td> 30.3<td>  8.6<td>156.8</tr>
-	<tr><th>Rubinius-1.2.3              <td>Ruby      <td>999.9<td>298.1<td>162.5<td> 20.1<td> 33.8<td> 97.0<td>273.4</tr>
+	<tr><th>Ruby-1.9.2p180              <td>Ruby      <td>266.3<td>628.4<td>196.6<td> 15.4<td> 30.3<td>  8.6<td>156.8</tr>
+	<tr><th>Rubinius-1.2.3              <td>Ruby      <td>210.8<td>298.1<td>162.5<td> 20.1<td> 33.8<td> 97.0<td>273.4</tr>
 </table>
 <br>
 <h1>Notes</h1><br>
@@ -85,7 +85,10 @@
 2) D programs are compiled with "ldc -O3 -release" or "gdc -O3".<br>
 3) Mono-sgen is used for implementations requiring the .NET framework. Mono-sgen is usually faster but costs more memory than mono.<br>
 <tr><th>sudoku:t<td>
-1) For these extremely hard Sudokus, <a href="http://www.enjoysudoku.com/JSolve12.zip">JSolve</a> can find the solutions in 0.23 CPU seconds.
+1) For these extremely hard Sudokus, <a href="http://www.enjoysudoku.com/JSolve12.zip">JSolve</a> can find the solutions in 0.23 CPU seconds.<br/>
+2) Preetam D'Souza's <a href="https://gist.github.com/1013790">sudoku_cp.rb</a> is faster for these 20 Sudokus, but slower on classical evaluation data such as <a href="http://www.sudokuvault.com/top50000.zip">top50000</a> and <a href="http://people.csse.uwa.edu.au/gordon/sudoku17">sudoku17</a>.<br/>
+3) Similarly, Peter Norvig's Python <a href="http://norvig.com/sudoku.py">solver</a> is faster than <a href="https://github.com/attractivechaos/plb/blob/master/sudoku/sudoku_v1.py">sudoku_v1.py</a> on this data set, but slower on others. Pypy favors sudoku_v1.py as well.<br/>
+4) My <a href="https://github.com/attractivechaos/plb/blob/master/sudoku/sudoku_v1.js">Javascript implementation</a> is also available <a href="http://attractivechaos.github.com/plb/kudoku.html">here</a> as a web page.
 <tr><th>matmul:t<br>matmul:m<td>
 1) LDC, PyPy, CPython2/3 and IronPython use "matmul_v2.*" and the rest use "matmul_v1.*" in the source code directory.<br>
 2) The built-in <a href="http://www.ruby-doc.org/stdlib/libdoc/matrix/rdoc/classes/Matrix.html">Matrix</a> class in Ruby does not transpose the second matrix before multiplication. Using the built-in class is twice as slow.<br>
