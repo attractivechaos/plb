@@ -7,17 +7,6 @@ $COLORS = (1..$SIZE).to_a
 $neighbors = Array.new($SIZE*$SIZE){[]}         # num -> neighbors
 $units = Array.new($SIZE*$SIZE){[[],[],[]]}     # num -> [ROW, COL, SQUARE]
 
-def display(grid)
-  sp = [['-'*6]*3]*"+"
-  grid.each_slice(9).each_with_index do |slice, index|
-    slice.each_slice(3).each_with_index do |s, i|
-      print s.inject {|z, n| [z, " ", n].join }
-      print " |" unless i==2
-    end
-    puts [2,5].include?(index) ? "\n"+sp : ""
-  end
-end
-
 def build_neighbors
   ### Build adjacency list based on row, col, and square constraints ###
   (0...$SIZE).each do |r|
@@ -87,16 +76,12 @@ def solve(grid)
   search((0...$SIZE*$SIZE).to_a, choices, $neighbors, 0)
 end
 
-def test(file, name=file, sep="\n")
+def test(file, sep="\n")
   grids = IO.read(file).chomp.split(sep)
   grids.map! { |x| x.chomp.split("").select {|c| c =~ /[0-9.]/ } }
-  t1 = Time.now
-  grids.each { |x| solve(x) }
-  elapsed = Time.now - t1
-  puts "%.5s secs to solve %d %s puzzles (avg: %.3f secs (%d Hz))" % [elapsed, grids.size, name,
-                                                                      elapsed/grids.size, grids.size/elapsed]
+  grids.each { |x| ret = solve(x); puts ret.join; puts }
 end
 
 build_neighbors
 
-test("/dev/stdin", 'hard')
+test("/dev/stdin")
