@@ -13,7 +13,9 @@ function solve() {
 		}
 	}
 	document.getElementById('text').value = v
-	document.getElementById('runtime').innerHTML = "Solving "+cnt+" Sudokus in "+ (new Date().getTime() - time_beg)/1000.0 + " seconds";
+	var t = (new Date().getTime() - time_beg)/1000.0;
+	var t2 = Math.floor(t / cnt * 10000) / 10000
+	document.getElementById('runtime').innerHTML = "Solving "+cnt+" Sudokus in "+ t + " seconds (" + t2 + " sec / Sudoku)";
 }
 --></script>
 <style type="text/css"><!--
