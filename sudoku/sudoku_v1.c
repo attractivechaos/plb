@@ -107,9 +107,7 @@ sdaux_t *sd_genmat()
 inline int sd_update(const sdaux_t *aux, int8_t sr[729], uint8_t sc[324], int r, int v)
 {
 	int c2, min = 10, min_c = 0;
-	for (c2 = 0; c2 < 4; ++c2) // update the column status bit (the highest bit)
-		if (v > 0) sc[aux->c[r][c2]] |= 0x80;
-		else sc[aux->c[r][c2]] &= 0x7f;
+	for (c2 = 0; c2 < 4; ++c2) sc[aux->c[r][c2]] += v<<7;
 	for (c2 = 0; c2 < 4; ++c2) { // update # available choices
 		int r2, rr, cc2, c = aux->c[r][c2];
 		if (v > 0) { // move forward
