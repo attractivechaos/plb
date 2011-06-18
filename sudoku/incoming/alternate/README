@@ -1,5 +1,6 @@
 Programs
 --------
 
-Sudoku_bc.java       http://www.colloquial.com/games/sudoku/Sudoku.java          by Bob Carpenter
-sudoku-aa+dlx        http://users.tkk.fi/~aajanki/sudoku/index.html              Antti Ajanki's DLX solver (Python)
+Sudoku_bc.java     http://www.colloquial.com/games/sudoku/Sudoku.java          by Bob Carpenter
+Sudoku_dl.java     http://www.cs.armstrong.edu/liang/intro7e/book/Sudoku.java  apparetly by Y. Daniel Liang
+sudoku-aa+dlx.py   http://users.tkk.fi/~aajanki/sudoku/index.html              Antti Ajanki's DLX solver
