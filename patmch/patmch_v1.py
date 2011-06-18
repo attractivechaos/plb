@@ -6,7 +6,9 @@ if (len(sys.argv) < 2):
 
 # the following is not correct. we have to trim off the tailing '\n'
 
-r = re.compile(sys.argv[1])
+repattern = sys.argv[1][:-1] if sys.argv[1][-1]=='\n' else sys.argv[1]
+r = re.compile(repattern)
 for line in sys.stdin:
-    if r.search(line[0:-1]):
-		sys.stdout.write(line)
+    line = line[:-1]
+    if line and r.search(line):
+        sys.stdout.write(line)
