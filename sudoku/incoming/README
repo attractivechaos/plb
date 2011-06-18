@@ -6,6 +6,7 @@ fsss.cc         http://sites.google.com/site/dobrichev/fsss/       Mladen Dobric
 JSolve*         http://www.enjoysudoku.com/JSolve12.zip            Jason T. Linhart's solver (12)
 kudoku.c        ../sudoku_v1.c                                     Attractive Chaos' solver
 sudocoo.c       http://www2.research.att.com/~gsf/                 Glenn Fowler's sudocoo
+sudoku-gh.js    http://hewgill.com/sudoku/                         Greg Hewgill's solver
 sudoku-pd.rb    https://gist.github.com/1013790                    Preetam D'Souza's Ruby solver
 sudoku-pn.py    http://norvig.com/sudoku.py                        Peter Norvig's solver (Python)
 sudoku_solver.c http://www.techfinesse.com/game/sudoku_solver.php  Bill DuPree's solver
