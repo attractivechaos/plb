@@ -1,7 +1,9 @@
 Programs
 --------
 
-fast_solv_9r2.c http://www.setbb.com/sudoku/viewtopic.php?t=1586   Ignacio Zelaya's fast_solv
+bb_sudoku.c     http://www.setbb.com/phpbb/viewtopic.php?p=11786   Modified BB Sudoku solver
+                http://www.setbb.com/phpbb/viewtopic.php?t=1824    Brian's famous BB Sudoku v1.0
+fast_solv_9r2.c http://www.setbb.com/sudoku/viewtopic.php?t=1586   Ignacio Zelaya's fast_solv (DLX)
 fsss.cc         http://sites.google.com/site/dobrichev/fsss/       Mladen Dobrichev's solver (8.6)
 JSolve*         http://www.enjoysudoku.com/JSolve12.zip            Jason T. Linhart's solver (12)
 kudoku.c        ../sudoku_v1.c                                     Attractive Chaos' solver
