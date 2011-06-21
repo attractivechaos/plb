@@ -83,7 +83,7 @@
 <tr></tr>
 <tr><th>General<td>
 1) C programs are compiled with "gcc/clang -O3 -fomit-frame-pointer" or "icc -O3 -fomit-frame-pointer -xSSE4.1"<br>
-2) D programs are compiled with "ldc -O3 -release" or "gdc -O3".<br>
+2) D programs are compiled with "ldc -O3 -release" or "gdc -O3 -frelease -inline".<br>
 3) Mono-sgen is used for implementations requiring the .NET framework. Mono-sgen is usually faster but costs more memory than mono.<br>
 <tr><th>sudoku:t<td>
 1) For these Sudokus, <a href="http://www.enjoysudoku.com/JSolve12.zip">JSolve</a> can find the solutions in 0.23 CPU seconds.<br/>
@@ -115,6 +115,12 @@
 3) The C implementation manipulates the memory, which may be unfair to other implementations.
 </tr>
 </table>
+<br/>
+<h1>Appendix: the Bar Chart</h1>
+<br/>
+<img src="plb-lang.png">
+<img src="plb-lib.png">
+<p>The bar chart is updated on June 21, 2011. It may not always be synchronized with the table.</p>
 </div>
 <script type="text/javascript">
 var sorter=new table.sorter("sorter");
