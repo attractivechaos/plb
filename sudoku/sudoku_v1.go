@@ -39,7 +39,7 @@ func sd_update(aux *sdaux_t, sr []int8, sc []uint8, r uint16, v int) int {
 			sc[c] |= 0x80
 		} else { sc[c] &= 0x7f }
 	}
-	for _, c := range aux.c[r] {
+	for _, c := range aux.c[r] { // the bottleneck is in this block
 		if v > 0 {
 			for _, rr := range aux.r[c] {
 				sr[rr]++
@@ -55,7 +55,7 @@ func sd_update(aux *sdaux_t, sr []int8, sc []uint8, r uint16, v int) int {
 			for _, rr := range aux.r[c] {
 				sr[rr]--
 				if sr[rr] != 0 { continue }
-				for _, cc := range aux.c[rr] { sc[cc]++ }
+				for _, cc := range aux.c[rr] { sc[cc]++ } // unroll this loop makes no difference
 			}
 		}
 	}
