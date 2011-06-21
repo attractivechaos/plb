@@ -48,7 +48,6 @@ function sd_solve(R, C, s)
 				end
 			end
 		end
-		local x = 0; for c = 0, 323 do x = x + sc[c] end
 		return min, min_c
 	end
 
