@@ -12,13 +12,9 @@ void main(string[] args) {
 	int max = 1, n = 0;
 	if (args.length >= 2) N = atoi(args[1]);
 	while (readln(stdin, buf)) {
-		++n;
-		int *p = (buf in h);
-		if (p != null) {
-			++(*p);
-			if (*p > max) max = *p;
-		} else h[buf] = 1;
-		if (n == N) {
+		int current = ++h[buf];
+		max = (current > max)? current : max;
+		if (++n == N) {
 			writef(h.length); writef("\t"); writefln(max);
 		}
 	}
