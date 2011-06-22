@@ -1,9 +1,8 @@
-my %h;
-my $max = 0;
+my (%h, $max);
+
 while (<>) {
-	my $p = \$h{$_};
-	if ($$p) { ++$$p; }
-	else { $$p = 1; }
-	$max = $$p if ($$p > $max);
+    next if ++$h{$_} > $max;
+    $max = $h{$_};
 }
-print scalar(keys %h), "\t$max\n";
+
+print keys %h . "\t$max\n";
