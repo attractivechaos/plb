@@ -1,6 +1,7 @@
 die("Usage: patmatch.pl regexp in.file\n") if (@ARGV == 0);
-my $re = shift(@ARGV);
+
+my $re = qr/$ARGV[0]/;
+
 while (<>) {
-  chomp;
-  print $_, "\n" if /$re/;
+  print if /$re/;
 }
