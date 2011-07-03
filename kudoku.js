@@ -61,9 +61,10 @@ function sd_update(R, C, sr, sc, r, v) {
 	return min<<16 | min_c; // return the col that has been modified and with the minimal available choices
 }
 
-function sd_solve(R, C, _s) {
+function sd_solve(R, C, _s, max_ret) {
 	var i, j, r, c, r2, min, cand, dir, hints = 0;
 	var sr = [], sc = [], cr = [], cc = [], out = [], ret = [];
+	if (max_ret == null) max_ret = 2;
 	for (r = 0; r < 729; ++r) sr[r] = 0;
 	for (c = 0; c < 324; ++c) sc[c] = 9;
 	for (i = 0; i < 81; ++i) {
@@ -100,6 +101,7 @@ function sd_solve(R, C, _s) {
 		for (j = 0; j < 81; ++j) y[j] = out[j]
 		for (j = 0; j < i; ++j) r = R[cc[j]][cr[j]], y[Math.floor(r/9)] = r%9 + 1;
 		ret.push(y)
+		if (ret.length >= max_ret) return ret;
 		--i; dir = -1;
 	}
 	return ret;
