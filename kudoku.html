@@ -38,7 +38,7 @@ function solve() {
 			if (x.length == 1) document.getElementById('9x9info').innerHTML = 'Unique solution'
 			else document.getElementById('9x9info').innerHTML = 'Multiple solutions'
 		}
-	}
+	} else document.getElementById('9x9info').innerHTML = 'Too few hints'
 }
 function strrep(a, t) {
 	var s = ''
