@@ -64,7 +64,7 @@ function draw_9x9() {
 function fill_9x9(ta) {
 	var sl = (ta.value).substring(ta.selectionStart,ta.selectionEnd); 
 	if (sl != null && sl.length >= 81) {
-		document.getElementById('9x9info').innerHTML = 'Select in the TextArea to fill the grid'
+		document.getElementById('9x9info').innerHTML = 'Input or select in the textarea to fill the grid'
 		for (var i = 0; i < 81; ++i) document.getElementById('C'+i).value = ''
 		for (var i = 0; i < 81; ++i)
 			if (sl.substr(i, 1) >= 1 && sl.substr(i, 1) <= 9)
@@ -73,7 +73,7 @@ function fill_9x9(ta) {
 }
 function clear_input() {
 	document.getElementById('text').value = ''
-	document.getElementById('9x9info').innerHTML = 'Select in the TextArea to fill the grid'
+	document.getElementById('9x9info').innerHTML = 'Input or select in the rextarea to fill the grid'
 	for (var i = 0; i < 81; ++i)
 		document.getElementById('C'+i).value = ''
 }
@@ -81,6 +81,8 @@ function clear_input() {
 <style type="text/css"><!--
     body, td, p { font: 12px "Lucida Grande", "Lucida Sans Unicode", Arial, sans-serif; }
     textarea { font: 100% "consolas", "Andale Mono", Monaco, Courier, monospace; border: 1px solid; }
+	a, a:visited { color: blue; }
+	a:hover { color: red; }
 	.input { border: 0px; width: 2em; height: 2em; text-align:center; }
 	.cell {  width: 1em; height: 1em; border-bottom:1px solid; border-left:1px solid; padding: 0.3em}
 	.cell1 { width: 1em; height: 1em; border-bottom:2px solid; border-left:1px solid; padding: 0.3em}
@@ -91,6 +93,17 @@ function clear_input() {
 </head>
 <body onLoad='draw_9x9();'>
 <h1>The Kudoku Sudoku Solver</h1>
+<p>The Kudoku Sudoku solver is probably the fastest Javascript solver to date.
+Although faster algorithms exist, they have not been ported to Javascript so far as I know. For more information
+on the Sudoku algorithms, see the <a href="http://en.wikipedia.org/wiki/Sudoku_algorithms">Wiki page</a>
+and my <a href="http://attractivechaos.wordpress.com/2011/06/19/an-incomplete-review-of-sudoku-solver-implementations/">blog post</a>.</p>
+<p>
+To use this solver, you may input multiple puzzles in the textarea or one puzzle in the 9x9 grid, and then click the `Solve' button.
+Alternatively, you may select text in the textarea to fill the grid. Example inputs are also provided.
+Note that solving `Hardest20x50' may take several to tens of seconds with Chrome, FireFox, Safari and Opera.
+IE6/7/8 may take far longer due to their crappy Javascript engine.</p>
+<p>All the HTML and Javascript source codes are distributed under <a href="http://en.wikipedia.org/wiki/MIT_License">the MIT open-source license</a>.</p>
+</p>
 Samples: <input type="button" value="Hardest20" onClick="document.getElementById('text').value=document.getElementById('hardest20').value;document.getElementById('runtime').innerHTML=''">
 <input type="button" value="Hardest20x50" onClick="document.getElementById('text').value=strrep(document.getElementById('hardest20').value,50);document.getElementById('runtime').innerHTML=''">
 <input type="button" value="Topn87" onClick="document.getElementById('text').value=document.getElementById('topn87').value;document.getElementById('runtime').innerHTML=''"><br/>
@@ -99,7 +112,7 @@ Samples: <input type="button" value="Hardest20" onClick="document.getElementById
 <td>
 <textarea rows="20" cols="85" id="text" onSelect="fill_9x9(this)"></textarea></br>
 </td>
-<td style="padding: 0 2em;"><span id="9x9"></span><span id="9x9info" style="color: gray;">Select in the TextArea to fill the grid</span></td>
+<td style="padding: 0 2em;"><span id="9x9"></span><span id="9x9info" style="color: gray;">Input or select in the textarea to fill the grid</span></td>
 </tr>
 </table>
 <input type="button" value="Solve" onClick="solve();">&nbsp;<input type="button" value="Clear" onClick="clear_input();">&nbsp;&nbsp;&nbsp;
