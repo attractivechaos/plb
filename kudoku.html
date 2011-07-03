@@ -60,6 +60,16 @@ function draw_9x9() {
 	}
 	s += '</table>'
 	document.getElementById('9x9').innerHTML = s
+	var inp = document.URL
+	if (inp.indexOf('?') >= 0) {
+		var match = /[?&]q=([^\s&]+)/.exec(inp)
+		if (match.length == 2 && match[1].length >= 81) {
+			document.getElementById('text').value = match[1]
+			for (var i = 0; i < 81; ++i)
+				if (match[1].substr(i, 1) >= 1 && match[1].substr(i, 1) <= 9)
+					document.document.getElementById('C'+i).value = match[1].substr(i, 1)
+		}
+	}
 }
 function fill_9x9(ta) {
 	var sl = (ta.value).substring(ta.selectionStart,ta.selectionEnd); 
@@ -99,7 +109,8 @@ on the Sudoku algorithms, see the <a href="http://en.wikipedia.org/wiki/Sudoku_a
 and my <a href="http://attractivechaos.wordpress.com/2011/06/19/an-incomplete-review-of-sudoku-solver-implementations/">blog post</a>.</p>
 <p>
 To use this solver, you may input multiple puzzles in the textarea or one puzzle in the 9x9 grid, and then click the `Solve' button.
-Alternatively, you may select text in the textarea to fill the grid. Example inputs are also provided.
+Alternatively, you may select text in the textarea to fill the grid or write the puzzle string in URL, for example
+like <a href="kudoku.html?q=.......12........3..23..4....18....5.6..7.8.......9.....85.....9...4.5..47...6...">this</a>. Example inputs are also provided.
 Note that solving `Hardest20x50' may take several to tens of seconds with Chrome, FireFox, Safari and Opera.
 IE6/7/8 may take far longer due to their crappy Javascript engine.</p>
 <p>All the HTML and Javascript source codes are distributed under <a href="http://en.wikipedia.org/wiki/MIT_License">the MIT open-source license</a>.</p>
