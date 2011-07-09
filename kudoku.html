@@ -3,7 +3,7 @@
 <title>The Kudoku Sudoku Solver</title>
 <script language="javascript" src="kudoku.js"></script>
 <script language="javascript"><!--
-var sudoku_aux = sd_genmat();
+var solver = sudoku_solver();
 
 function solve() {
 	// solve the puzzles in the textarea
@@ -11,7 +11,7 @@ function solve() {
 	var v = '', time_beg = new Date().getTime(), cnt = 0;
 	for (var i = 0; i < s.length; ++i) {
 		if (s[i].length >= 81) {
-			var x = sd_solve(sudoku_aux[0], sudoku_aux[1], s[i])
+			var x = solver(s[i])
 			v += x[0].join('') + "\n" // output the first solution only
 			++cnt;
 		}
@@ -31,7 +31,7 @@ function solve() {
 		} else s += '.'
 	}
 	if (n_hints >= 15) { // enough hints
-		var x = sd_solve(sudoku_aux[0], sudoku_aux[1], s)
+		var x = solver(s)
 		if (x.length == 0) {
 			document.getElementById('9x9info').innerHTML = 'No solution'
 		} else {
