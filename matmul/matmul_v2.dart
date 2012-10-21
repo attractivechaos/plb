@@ -56,6 +56,6 @@ warmup() {
 
 main() {
   warmup();
-  var result = domul(500);
+  var result = domul(1000);
   print(result);
 }

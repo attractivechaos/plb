@@ -92,7 +92,6 @@ main()
 	fp.onLine = () {
 		var l = fp.readLine();
 		var ret = s.solve(l);
-		ret[0].join('');
 		print(ret[0]);
 	};
 }
