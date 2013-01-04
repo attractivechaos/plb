@@ -41,7 +41,7 @@ class Sudoku {
 	solve(s_) {
 		int j, r, c, r2, min, hints = 0;
 		var sr = new List<int>(729), sc = new List<int>(324);
-		var cr = new List<int>(81), cc = new List<int>(81), out = new List<int>(81), ret = <int>[];
+		var cr = new List<int>(81), cc = new List<int>(81), out = new List<int>(81), ret = [];
 		for (r = 0; r < 729; ++r) sr[r] = 0;
 		for (c = 0; c < 324; ++c) sc[c] = 9;
 		for (int i = 0; i < 81; ++i) {

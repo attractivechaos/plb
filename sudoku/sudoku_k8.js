@@ -91,6 +91,6 @@ while (f.readline(x) >= 0) {
 	var l = x.toString();
 	if (l.length >= 81) {
 		var r = solver(l)
-		for (var i = 0; i < r.length; ++i) print(r[i].join(''))
+		for (var i = 0; i < r.length; ++i) print(r[i].join('')+'\n')
 	}
 }
