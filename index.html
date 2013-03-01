@@ -11,13 +11,16 @@
 <h1>Overview</h1><br>
 <table cellpadding="0" cellspacing="0" border="0" class="sortable">
 <tr></tr>
-<tr><th>Philosophy<td>1) Benchmark language implementations, not individual programs (simple tasks with few pitfalls).<br>
+<tr><th width="10%">Philosophy<td>1) Benchmark language implementations, not individual programs (simple tasks with few pitfalls).<br>
 2) Benchmark one language a time, not a mixture of languages (no non-standard libraries in other languages; no language extension).<br>
 </tr>
 <tr><th>CPU<td>Intel(R) Xeon(R) CPU  E5440  @ 2.83GHz</tr>
 <tr><th>Memory<td>16GB</tr>
 <tr><th>OS<td>Debian GNU/Linux 5.0</tr>
 <tr><th>Source code<td><a class="link" href="https://github.com/attractivechaos/plb">https://github.com/attractivechaos/plb</a></tr>
+<tr><th>Note on update<td>The benchmark was originally conducted in June, 2011.
+The results for a few implementations have been updated since then, but others have not. The original results can be found at <a class="link" href="plb-original.html">here</a>.
+The picture below is for the old results.</tr>
 </table>
 <br>
 <h1>Benchmarks</h1><br>
@@ -60,8 +63,8 @@
 	<tr><th>V8-r8384                    <td>Javascript<td>3.7  <td>2.6  <td>141.6<td>  1.7<td>  3.0<td>  7.3<td> 97.3</tr>
 	<tr><th>JaegarMonkey-a95d42642281   <td>Javascript<td>18.1 <td>16.4 <td>35.8 <td>  1.9<td>  2.8<td>  9.3<td>274.6</tr>
 <!--	<tr><th>Rhino-1.7r2@JRE-1.6.0_14    <td>Javascript<td>79.9 <td>567.8<td>999.9<td>999.9<td>999.9<td>999.9</tr>-->
-	<tr><th>LuaJIT-2.0.0-beta7 (JIT-on) <td>Lua       <td>6.8  <td>2.2  <td>33.2 <td>  5.6<td>999.9<td>  4.5<td>123.7</tr>
-	<tr><th>LuaJIT-2.0.0-beta7 (JIT-off)<td>Lua       <td>16.2 <td>20.8 <td>33.0 <td>  5.6<td>999.9<td>  4.6<td>123.6</tr>
+	<tr><th>LuaJIT-2.0.1 (JIT-on)       <td>Lua       <td>3.8  <td>2.5  <td>33.2 <td>  6.2<td>999.9<td>  4.5<td>123.8</tr>
+	<tr><th>LuaJIT-2.0.1 (JIT-off)      <td>Lua       <td>16.5 <td>20.8 <td>33.0 <td>  6.2<td>999.9<td>  4.6<td>123.6</tr>
 	<tr><th>llvm-lua-1.3.1@LLVM-2.8     <td>Lua       <td>26.9 <td>31.1 <td>73.4 <td>  6.8<td>999.9<td>  5.2<td>164.0</tr>
 	<tr><th>Lua-5.1.4                   <td>Lua       <td>50.5 <td>68.3 <td>65.4 <td>  6.2<td>999.9<td>  5.7<td>197.6</tr>
 	<tr><th>Perl-5.12.2                 <td>Perl      <td>121.2<td>230.3<td>225.6<td>  0.5<td> 12.6<td>  6.3<td>219.9</tr>
