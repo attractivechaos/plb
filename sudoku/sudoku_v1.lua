@@ -15,42 +15,41 @@ function sd_genmat()
 	return R, C
 end
 
-function sd_solve(R, C, s)
-
-	local function sd_update(R, C, sr, sc, r, v)
-		local min, min_c = 10, 0
-		for c2 = 1, 4 do
-			if v > 0 then sc[C[r][c2]] = sc[C[r][c2]] + 128
-			else sc[C[r][c2]] = sc[C[r][c2]] - 128 end
-		end
-		for c2 = 1, 4 do
-			local c = C[r][c2]
-			if v > 0 then
-				for r2 = 1, 9 do
-					local rr = R[c][r2]
-					sr[rr] = sr[rr] + 1
-					if sr[rr] == 1 then
-						for cc2 = 1, 4 do
-							local cc = C[rr][cc2]
-							sc[cc] = sc[cc] - 1
-							if sc[cc] < min then min, min_c = sc[cc], cc end
-						end
-					end
-				end
-			else
-				for r2 = 1, 9 do
-					local rr = R[c][r2]
-					sr[rr] = sr[rr] - 1
-					if sr[rr] == 0 then
-						local p = C[rr]
-						sc[p[1]], sc[p[2]], sc[p[3]], sc[p[4]] = sc[p[1]]+1, sc[p[2]]+1, sc[p[3]]+1, sc[p[4]]+1
+function sd_update(R, C, sr, sc, r, v)
+	local min, min_c = 10, 0
+	for c2 = 1, 4 do
+		if v > 0 then sc[C[r][c2]] = sc[C[r][c2]] + 128
+		else sc[C[r][c2]] = sc[C[r][c2]] - 128 end
+	end
+	for c2 = 1, 4 do
+		local c = C[r][c2]
+		if v > 0 then
+			for r2 = 1, 9 do
+				local rr = R[c][r2]
+				sr[rr] = sr[rr] + 1
+				if sr[rr] == 1 then
+					for cc2 = 1, 4 do
+						local cc = C[rr][cc2]
+						sc[cc] = sc[cc] - 1
+						if sc[cc] < min then min, min_c = sc[cc], cc end
 					end
 				end
 			end
+		else
+			for r2 = 1, 9 do
+				local rr = R[c][r2]
+				sr[rr] = sr[rr] - 1
+				if sr[rr] == 0 then
+					local p = C[rr]
+					sc[p[1]], sc[p[2]], sc[p[3]], sc[p[4]] = sc[p[1]]+1, sc[p[2]]+1, sc[p[3]]+1, sc[p[4]]+1
+				end
+			end
 		end
-		return min, min_c
 	end
+	return min, min_c
+end
 
+function sd_solve(R, C, s)
 	local sr, sc, cr, cc, hints = {}, {}, {}, {}, 0
 	for r = 0, 728 do sr[r] = 0 end
 	for c = 0, 323 do sc[c] = 9 end
