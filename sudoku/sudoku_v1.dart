@@ -87,11 +87,11 @@ class Sudoku {
 main()
 {
 	List<String> argv = new Options().arguments;
-	var fp = new StringInputStream(new File(argv[0]).openInputStream(), Encoding.ASCII);
+	var fp = new File(argv[0]);
+	var lines = fp.readAsLinesSync(Encoding.ASCII);
 	Sudoku s = new Sudoku();
-	fp.onLine = () {
-		var l = fp.readLine();
-		var ret = s.solve(l);
+	for (int i = 0; i < lines.length; ++i) {
+		var ret = s.solve(lines[i]);
 		print(ret[0]);
 	};
 }
