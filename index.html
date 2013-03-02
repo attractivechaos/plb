@@ -105,8 +105,9 @@ The picture below is for the old results.</tr>
 	<a href="http://lh3lh3.users.sourceforge.net/reb.shtml">Better libraries</a> exist in C++.<br>
 4) I cannot get the <a href="https://github.com/attractivechaos/plb/blob/master/patmch/patmch_v1.d">D implementation</a> working.
 	Rhino works for the <a href="https://github.com/attractivechaos/plb/blob/master/patmch/patmch_v1.js">Javascript program</a>, but run extremely slow.</br>
+5) Lua does not come with a real regex engine, so its string pattern matching functions were used instead, which were not intended for speed.</br>
 </tr>
-<tr><th>patmch:2t<td>1) Lua does not support the "|" regex operator.</tr>
+<tr><th>patmch:2t<td>1) Lua built-in string matching, which is different regex matching,  does not support the "|" regex operator.</tr>
 <tr><th>dict:t<br>dict:m<td>
 1) All language implementations use "dict_v1.*" in the <a href="https://github.com/attractivechaos/plb/blob/master/dict/">repository</a>.<br>
 2) My <a href="https://github.com/attractivechaos/plb/blob/master/ext/khash.h">khash</a> library is used for the
