@@ -45,7 +45,7 @@ class Sudoku {
 		for (r = 0; r < 729; ++r) sr[r] = 0;
 		for (c = 0; c < 324; ++c) sc[c] = 9;
 		for (int i = 0; i < 81; ++i) {
-			int a = s_.charCodeAt(i) >= 49 && s_.charCodeAt(i) <= 57? s_.charCodeAt(i) - 49 : -1;
+			int a = s_.codeUnitAt(i) >= 49 && s_.codeUnitAt(i) <= 57? s_.codeUnitAt(i) - 49 : -1;
 			if (a >= 0) _update(sr, sc, i * 9 + a, 1);
 			if (a >= 0) ++hints;
 			cr[i] = cc[i] = -1; out[i] = a + 1;
@@ -88,7 +88,7 @@ main()
 {
 	List<String> argv = new Options().arguments;
 	var fp = new File(argv[0]);
-	var lines = fp.readAsLinesSync(Encoding.ASCII);
+	var lines = fp.readAsLinesSync(encoding: Encoding.ASCII);
 	Sudoku s = new Sudoku();
 	for (int i = 0; i < lines.length; ++i) {
 		var ret = s.solve(lines[i]);
