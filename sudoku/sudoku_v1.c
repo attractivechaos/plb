@@ -104,7 +104,7 @@ sdaux_t *sd_genmat()
 	return a;
 }
 // update the state vectors when we pick up choice r; v=1 for setting choice; v=-1 for reverting
-inline int sd_update(const sdaux_t *aux, int8_t sr[729], uint8_t sc[324], int r, int v)
+static inline int sd_update(const sdaux_t *aux, int8_t sr[729], uint8_t sc[324], int r, int v)
 {
 	int c2, min = 10, min_c = 0;
 	for (c2 = 0; c2 < 4; ++c2) sc[aux->c[r][c2]] += v<<7;
