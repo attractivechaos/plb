@@ -89,7 +89,7 @@ class sudoku_v1 {
 			}
 			if (i < 0) break;
 			char[] y = new char[81];
-			for (j = 0; j < 81; ++j) y[i] = (char)(out[i] + '1');
+			for (j = 0; j < 81; ++j) y[j] = (char)(out[j] + '1');
 			for (j = 0; j < i; ++j) { r = R[cc[j]][cr[j]]; y[r/9] = (char)(r%9 + '1'); }
 			System.out.println(new String(y));
 			++n; --i; dir = -1; // backtrack
