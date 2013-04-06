@@ -85,7 +85,7 @@ int sdSolve(in Sdaux *aux, in char *_s)
 
 	for (int i = 0; i < 81; ++i) {
 		int a = _s[i] >= '1' && _s[i] <= '9'? _s[i] - '1' : -1;
-		if (a >= 0) sdUpdate(aux, sr, sc, i * 9 + a, 1);
+		if (a >= 0) sdUpdate(aux, sr.ptr, sc.ptr, i * 9 + a, 1);
 		if (a >= 0) ++hints;
 		outs[i] = _s[i];
 	}
@@ -106,11 +106,11 @@ int sdSolve(in Sdaux *aux, in char *_s)
 				if (min == 0 || min == 10) dir = cr[i--] = -1;
 			}
 			int r2, c = cc[i];
-			if (dir == -1 && cr[i] >= 0) sdUpdate(aux, sr, sc, aux.r[c][cr[i]], -1);
+			if (dir == -1 && cr[i] >= 0) sdUpdate(aux, sr.ptr, sc.ptr, aux.r[c][cr[i]], -1);
 			for (r2 = cr[i] + 1; r2 < 9; ++r2)
 				if (sr[aux.r[c][r2]] == 0) break;
 			if (r2 < 9) {
-				cand = sdUpdate(aux, sr, sc, aux.r[c][r2], 1);
+				cand = sdUpdate(aux, sr.ptr, sc.ptr, aux.r[c][r2], 1);
 				cr[i++] = cast(byte)r2; dir = 1;
 			} else dir = cr[i--] = -1;
 		}
