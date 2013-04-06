@@ -17,7 +17,10 @@ class Sudoku {
 	}
 	_update(sr, sc, r, v) {
 		int min = 10, min_c = 0;
-		for (int c2 = 0; c2 < 4; ++c2) sc[_C[r][c2]] += v<<7;
+		for (int c2 = 0; c2 < 4; ++c2) {
+			if (v > 0) sc[_C[r][c2]] += 1<<7;
+			else sc[_C[r][c2]] -= 1<<7;
+		}
 		for (int c2 = 0; c2 < 4; ++c2) {
 			int r2, rr, cc2, c = _C[r][c2];
 			if (v > 0) {
