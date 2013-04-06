@@ -27,6 +27,32 @@ pub impl Sudoku {
 		}
 		return s;
 	}
+	#[inline(always)]
+	fn forward(&self, sr: &mut [int], sc: &mut [int], c: int, min: &mut int, min_c: &mut int) {
+		for self.r[c].each |&rr| {
+			sr[rr] += 1;
+			if sr[rr] == 1 {
+				for self.c[rr].each |&cc| {
+					sc[cc] -= 1;
+					if (sc[cc] < *min) {
+						*min = sc[cc]; *min_c = cc;
+					}
+				}
+			}
+		}
+	}
+	#[inline(always)]
+	fn revert(&self, sr: &mut [int], sc: &mut [int], c: int) {
+		for self.r[c].each |&rr| {
+			sr[rr] -= 1;
+			if sr[rr] == 0 {
+				for self.c[rr].each |&i| {
+					sc[i] += 1;
+				}
+			}
+		}
+	}
+	#[inline(always)]
 	fn update(&self, sr: &mut [int], sc: &mut [int], r: int, v: int) -> int {
 		let mut min = 10, min_c = 0;
 		for self.c[r].each |&i| {
@@ -34,26 +60,9 @@ pub impl Sudoku {
 		}
 		for self.c[r].each |&c| {
 			if v > 0 { // move forward
-				for self.r[c].each |&rr| {
-					sr[rr] += 1;
-					if sr[rr] == 1 {
-						for self.c[rr].each |&cc| {
-							sc[cc] -= 1;
-							if (sc[cc] < min) {
-								min = sc[cc]; min_c = cc;
-							}
-						}
-					}
-				}
+				self.forward(sr, sc, c, &mut min, &mut min_c)
 			} else {
-				for self.r[c].each |&rr| {
-					sr[rr] -= 1;
-					if sr[rr] == 0 {
-						for self.c[rr].each |&i| {
-							sc[i] += 1;
-						}
-					}
-				}
+				self.revert(sr, sc, c)
 			}
 		}
 		return min<<16 | min_c;
