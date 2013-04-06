@@ -29,18 +29,15 @@ pub impl Sudoku {
 	}
 	fn update(&self, sr: &mut [int], sc: &mut [int], r: int, v: int) -> int {
 		let mut min = 10, min_c = 0;
-		for int::range(0, 4) |c2| {
-			sc[self.c[r][c2]] += v<<7;
+		for self.c[r].each |&i| {
+			sc[i] += v<<7;
 		}
-		for int::range(0, 4) |c2| {
-			let c = self.c[r][c2];
+		for self.c[r].each |&c| {
 			if v > 0 { // move forward
-				for int::range(0, 9) |r2| {
-					let rr = self.r[c][r2];
+				for self.r[c].each |&rr| {
 					sr[rr] += 1;
 					if sr[rr] == 1 {
-						for int::range(0, 4) |cc2| {
-							let cc = self.c[rr][cc2];
+						for self.c[rr].each |&cc| {
 							sc[cc] -= 1;
 							if (sc[cc] < min) {
 								min = sc[cc]; min_c = cc;
@@ -49,12 +46,12 @@ pub impl Sudoku {
 					}
 				}
 			} else {
-				for int::range(0, 9) |r2| {
-					let rr = self.r[c][r2];
+				for self.r[c].each |&rr| {
 					sr[rr] -= 1;
 					if sr[rr] == 0 {
-						let p = self.c[rr];
-						sc[p[0]] += 1; sc[p[1]] += 1; sc[p[2]] += 1; sc[p[3]] += 1;
+						for self.c[rr].each |&i| {
+							sc[i] += 1;
+						}
 					}
 				}
 			}
@@ -85,9 +82,9 @@ pub impl Sudoku {
 					let mut min = cand>>16;
 					cc[i] = cand & 0xffff;
 					if min > 1 {
-						for int::range(0, 324) |c| {
-							if sc[c] < min {
-								min = sc[c]; cc[i] = c;
+						for sc.eachi |c, &v| {
+							if v < min {
+								min = v; cc[i] = c as int;
 								if min <= 1 { break; }
 							}
 						}
