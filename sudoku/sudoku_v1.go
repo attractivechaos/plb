@@ -18,10 +18,10 @@ func sd_genmat() *sdaux_t {
 	for i := 0; i < 9; i++ {
 		for j := 0; j < 9; j++ {
 			for k := 0; k < 9; k++ {
-				a.c[r][0] = (uint16)(9*i + j)
-				a.c[r][1] = (uint16)((i/3*3+j/3)*9 + k + 81)
-				a.c[r][2] = (uint16)(9*i + k + 162)
-				a.c[r][3] = (uint16)(9*j + k + 243)
+				a.c[r][0] = uint16(9*i + j)
+				a.c[r][1] = uint16((i/3*3+j/3)*9 + k + 81)
+				a.c[r][2] = uint16(9*i + k + 162)
+				a.c[r][3] = uint16(9*j + k + 243)
 				r++
 			}
 		}
@@ -32,7 +32,7 @@ func sd_genmat() *sdaux_t {
 	for r := 0; r < 729; r++ {
 		for c2 := 0; c2 < 4; c2++ {
 			k := a.c[r][c2]
-			a.r[k][nr[k]] = (uint16)(r)
+			a.r[k][nr[k]] = uint16(r)
 			nr[k]++
 		}
 	}
@@ -40,7 +40,7 @@ func sd_genmat() *sdaux_t {
 }
 
 func sd_update(aux *sdaux_t, sr []int8, sc []uint8, r uint16, v int) int {
-	min, min_c := (uint8)(10), (uint16)(0)
+	min, min_c := uint8(10), uint16(0)
 	rows := aux.c[r]
 	if v > 0 {
 		for _, c := range rows {
@@ -77,7 +77,7 @@ func sd_update(aux *sdaux_t, sr []int8, sc []uint8, r uint16, v int) int {
 		}
 
 	}
-	return (int)(min)<<16 | (int)(min_c)
+	return int(min)<<16 | int(min_c)
 }
 
 func sd_solve(aux *sdaux_t, _s []byte) int {
@@ -94,10 +94,10 @@ func sd_solve(aux *sdaux_t, _s []byte) int {
 	for i := 0; i < 81; i++ {
 		a := -1
 		if _s[i] >= '1' && _s[i] <= '9' {
-			a = (int)(_s[i] - '1')
+			a = int(_s[i] - '1')
 		}
 		if a >= 0 {
-			sd_update(aux, sr, sc, (uint16)(i*9+a), 1)
+			sd_update(aux, sr, sc, uint16(i*9+a), 1)
 			hints++
 		}
 		cr[i], cc[i], out[i] = -1, -1, _s[i]
@@ -106,12 +106,12 @@ func sd_solve(aux *sdaux_t, _s []byte) int {
 	for {
 		for i >= 0 && i < 81-hints {
 			if dir == 1 {
-				min := (uint8)(cand >> 16)
-				cc[i] = (int16)(cand & 0xffff)
+				min := uint8(cand >> 16)
+				cc[i] = int16(cand & 0xffff)
 				if min > 1 {
 					for c, scc := range sc {
 						if scc < min {
-							min, cc[i] = scc, (int16)(c)
+							min, cc[i] = scc, int16(c)
 							if min <= 1 {
 								break
 							}
@@ -148,7 +148,7 @@ func sd_solve(aux *sdaux_t, _s []byte) int {
 		}
 		for j := 0; j < i; j++ {
 			r := aux.r[cc[j]][cr[j]]
-			out[r/9] = (byte)(r%9) + '1'
+			out[r/9] = byte(r%9) + '1'
 		}
 		fmt.Println(out)
 		fmt.Println('\n')
