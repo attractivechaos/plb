@@ -48,14 +48,16 @@ func sd_update(aux *sdaux_t, sr []int8, sc []uint8, r uint16, v int) int {
 		}
 		for _, c := range rows {
 			for _, rr := range aux.r[c] {
-				sr[rr]++
-				if sr[rr] != 1 {
+				v := sr[rr] + 1
+				sr[rr] = v
+				if v != 1 {
 					continue
 				}
 				for _, cc := range aux.c[rr] {
-					sc[cc]--
-					if sc[cc] < min {
-						min, min_c = sc[cc], cc
+					v := sc[cc] - 1
+					sc[cc] = v
+					if v < min {
+						min, min_c = v, cc
 					}
 				}
 			}
@@ -66,8 +68,9 @@ func sd_update(aux *sdaux_t, sr []int8, sc []uint8, r uint16, v int) int {
 		}
 		for _, c := range rows {
 			for _, rr := range aux.r[c] {
-				sr[rr]--
-				if sr[rr] != 0 {
+			        v := sr[rr] - 1
+				sr[rr] = v
+				if v != 0 {
 					continue
 				}
 				for _, cc := range aux.c[rr] {
