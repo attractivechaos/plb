@@ -41,19 +41,19 @@ func sd_genmat() *sdaux_t {
 
 func sd_update(aux *sdaux_t, sr []int8, sc []uint8, r uint16, v int) int {
 	min, min_c := uint8(10), uint16(0)
-	rows := aux.c[r]
+	rows := &aux.c[r]
 	if v > 0 {
 		for _, c := range rows {
 			sc[c] |= 0x80
 		}
 		for _, c := range rows {
-			for _, rr := range aux.r[c] {
+			for _, rr := range &aux.r[c] {
 				v := sr[rr] + 1
 				sr[rr] = v
 				if v != 1 {
 					continue
 				}
-				for _, cc := range aux.c[rr] {
+				for _, cc := range &aux.c[rr] {
 					v := sc[cc] - 1
 					sc[cc] = v
 					if v < min {
@@ -67,13 +67,13 @@ func sd_update(aux *sdaux_t, sr []int8, sc []uint8, r uint16, v int) int {
 			sc[c] &= 0x7f
 		}
 		for _, c := range rows {
-			for _, rr := range aux.r[c] {
-			        v := sr[rr] - 1
+			for _, rr := range &aux.r[c] {
+				v := sr[rr] - 1
 				sr[rr] = v
 				if v != 0 {
 					continue
 				}
-				for _, cc := range aux.c[rr] {
+				for _, cc := range &aux.c[rr] {
 					sc[cc]++
 				} // unroll this loop makes no difference
 			}
