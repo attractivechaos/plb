@@ -3,11 +3,12 @@ import 'dart:io';
 import 'dart:typeddata';
 
 class Sudoku {
-  var _R, _C;
-  Sudoku() {
-    _R = new List<Uint16List>(324);
-    _C = new List<List<int>>(729);
-    Uint8List nr = new Uint8List(324);
+  final _R = new List<Uint16List>(324);
+  final _C = new List<List<int>>(729);
+  final StringBuffer sbuf;
+  
+  Sudoku(StringBuffer this.sbuf) {
+    final Uint8List nr = new Uint8List(324);
     for (int i = 0, r = 0; i < 9; ++i)
       for (int j = 0; j < 9; ++j)
         for (int k = 0; k < 9; ++k)
@@ -58,47 +59,50 @@ class Sudoku {
       cr[i] = cc[i] = -1; out[i] = a + 1;
     }
 
-    int i = 0, dir = 1, cand = 10<<16|0;
-    
-    while (i >= 0 && i < 81 - hints) {
-      if (dir == 1) {
-        min = cand>>16; cc[i] = cand&0xffff;
-        if (min > 1) {
-          for (c = 0; c < 324; ++c) {
-            if (sc[c] < min) {
-              min = sc[c]; cc[i] = c;
-              if (min <= 1) break;
+    for (int i = 0, dir = 1, cand = 10<<16|0;;) {
+      while (i >= 0 && i < 81 - hints) {
+        if (dir == 1) {
+          min = cand>>16; cc[i] = cand&0xffff;
+          if (min > 1) {
+            for (c = 0; c < 324; ++c) {
+              if (sc[c] < min) {
+                min = sc[c]; cc[i] = c;
+                if (min <= 1) break;
+              }
             }
           }
+          if (min == 0 || min == 10) cr[i--] = dir = -1;
         }
-        if (min == 0 || min == 10) cr[i--] = dir = -1;
+        c = cc[i];
+        if (dir == -1 && cr[i] >= 0) _update(sr, sc, _R[c][cr[i]], -1);
+        for (r2 = cr[i] + 1; r2 < 9; ++r2)
+          if (sr[_R[c][r2]] == 0) break;
+        if (r2 < 9) {
+          cand = _update(sr, sc, _R[c][r2], 1);
+          cr[i++] = r2; dir = 1;
+        } else cr[i--] = dir = -1;
       }
-      c = cc[i];
-      if (dir == -1 && cr[i] >= 0) _update(sr, sc, _R[c][cr[i]], -1);
-      for (r2 = cr[i] + 1; r2 < 9; ++r2)
-        if (sr[_R[c][r2]] == 0) break;
-      if (r2 < 9) {
-        cand = _update(sr, sc, _R[c][r2], 1);
-        cr[i++] = r2; dir = 1;
-      } else cr[i--] = dir = -1;
+  
+      if (i < 0) break;
+      Uint8List y = new Uint8List(81);
+      for (j = 0; j < 81; ++j) y[j] = out[j];
+      for (j = 0; j < i; ++j) { r = _R[cc[j]][cr[j]]; y[r~/9] = r%9 + 1; }
+      sbuf.writeAll(y);
+      sbuf.writeln();
+      --i; dir = -1;
     }
-
-    Int16List y = new Int16List(81);
-    for (j = 0; j < 81; ++j) y[j] = out[j];
-    for (j = 0; j < i; ++j) { r = _R[cc[j]][cr[j]]; y[r~/9] = r%9 + 1; }
-
-    return y;
   }
 }
 
 main()
 {
-  List<String> argv = new Options().arguments;
-  var fp = new File(argv[0]);
-  var lines = fp.readAsLinesSync(encoding: Encoding.ASCII);
-  Sudoku s = new Sudoku();
+  final StringBuffer sbuf = new StringBuffer();
+  final List<String> argv = new Options().arguments;
+  final fp = new File(argv[0]);
+  final lines = fp.readAsLinesSync(encoding: Encoding.ASCII);
+  final Sudoku s = new Sudoku(sbuf);
   for (int i = 0; i < lines.length; ++i) {
-    var ret = s.solve(lines[i]);
-    print(ret);
+    s.solve(lines[i]);
   }
+  print(sbuf);
 }
