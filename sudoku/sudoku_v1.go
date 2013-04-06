@@ -2,10 +2,8 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"os"
-	"runtime"
 )
 
 type sdaux_t struct {
@@ -82,7 +80,7 @@ func sd_update(aux *sdaux_t, sr []int8, sc []uint8, r uint16, v int) int {
 	return (int)(min)<<16 | (int)(min_c)
 }
 
-func sd_solve(aux *sdaux_t, _s []byte, retval *bytes.Buffer, doneChannel chan int) int {
+func sd_solve(aux *sdaux_t, _s []byte) int {
 	sr := make([]int8, 729)
 	cr := make([]int8, 81)
 	sc := make([]uint8, 324)
@@ -152,44 +150,26 @@ func sd_solve(aux *sdaux_t, _s []byte, retval *bytes.Buffer, doneChannel chan in
 			r := aux.r[cc[j]][cr[j]]
 			out[r/9] = (byte)(r%9) + '1'
 		}
-		retval.Write(out)
-		retval.WriteRune('\n')
+		fmt.Println(out)
+		fmt.Println('\n')
 		n++
 		i--
 		dir = -1
 	}
-	doneChannel <- 1
 	return n
 }
 
 func main() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
-
 	a := sd_genmat()
 	r := bufio.NewReader(os.Stdin)
-	doneChannel := make(chan int)
-	counter := 0
-	var retBuffers [82]bytes.Buffer
-
-	// Start the goroutines
 	for {
 		l, e := r.ReadSlice('\n')
 		if e != nil {
 			break
 		}
 		if len(l) > 81 {
-			go sd_solve(a, l, &retBuffers[counter], doneChannel)
-			counter++
+			sd_solve(a, l)
+			fmt.Println('\n')
 		}
-	}
-
-	// Wait for the same number of goroutines to complete
-	for i := 0; i < counter; i++ {
-		<-doneChannel
-	}
-
-	// Write the results
-	for i := 0; i < counter; i++ {
-		fmt.Println(retBuffers[i].String())
 	}
 }
