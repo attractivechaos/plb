@@ -47,9 +47,8 @@ func sd_update_forward(aux *sdaux_t, sr []int8, sc []uint8, r uint16) int {
 	}
 	for _, c := range rows {
 		for _, rr := range &aux.r[c] {
-			v := sr[rr] + 1
-			sr[rr] = v
-			if v != 1 {
+			sr[rr]++
+			if sr[rr] != 1 {
 				continue
 			}
 			for _, cc := range &aux.c[rr] {
@@ -71,9 +70,8 @@ func sd_update_revert(aux *sdaux_t, sr []int8, sc []uint8, r uint16) {
 	}
 	for _, c := range rows {
 		for _, rr := range &aux.r[c] {
-			v := sr[rr] - 1
-			sr[rr] = v
-			if v != 0 {
+			sr[rr]--
+			if sr[rr] != 0 {
 				continue
 			}
 			for _, cc := range &aux.c[rr] {
