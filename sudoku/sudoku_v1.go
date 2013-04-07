@@ -39,48 +39,48 @@ func sd_genmat() *sdaux_t {
 	return a
 }
 
-func sd_update(aux *sdaux_t, sr []int8, sc []uint8, r uint16, v int) int {
+func sd_update_forward(aux *sdaux_t, sr []int8, sc []uint8, r uint16) int {
 	min, min_c := uint8(10), uint16(0)
 	rows := &aux.c[r]
-	if v > 0 {
-		for _, c := range rows {
-			sc[c] |= 0x80
-		}
-		for _, c := range rows {
-			for _, rr := range &aux.r[c] {
-				v := sr[rr] + 1
-				sr[rr] = v
-				if v != 1 {
-					continue
-				}
-				for _, cc := range &aux.c[rr] {
-					v := sc[cc] - 1
-					sc[cc] = v
-					if v < min {
-						min, min_c = v, cc
-					}
+	for _, c := range rows {
+		sc[c] |= 0x80
+	}
+	for _, c := range rows {
+		for _, rr := range &aux.r[c] {
+			v := sr[rr] + 1
+			sr[rr] = v
+			if v != 1 {
+				continue
+			}
+			for _, cc := range &aux.c[rr] {
+				v := sc[cc] - 1
+				sc[cc] = v
+				if v < min {
+					min, min_c = v, cc
 				}
 			}
 		}
-	} else {
-		for _, c := range rows {
-			sc[c] &= 0x7f
-		}
-		for _, c := range rows {
-			for _, rr := range &aux.r[c] {
-				v := sr[rr] - 1
-				sr[rr] = v
-				if v != 0 {
-					continue
-				}
-				for _, cc := range &aux.c[rr] {
-					sc[cc]++
-				} // unroll this loop makes no difference
-			}
-		}
-
 	}
 	return int(min)<<16 | int(min_c)
+}
+
+func sd_update_revert(aux *sdaux_t, sr []int8, sc []uint8, r uint16) {
+	rows := &aux.c[r]
+	for _, c := range rows {
+		sc[c] &= 0x7f
+	}
+	for _, c := range rows {
+		for _, rr := range &aux.r[c] {
+			v := sr[rr] - 1
+			sr[rr] = v
+			if v != 0 {
+				continue
+			}
+			for _, cc := range &aux.c[rr] {
+				sc[cc]++
+			} // unroll this loop makes no difference
+		}
+	}
 }
 
 func sd_solve(aux *sdaux_t, _s []byte) int {
@@ -100,7 +100,7 @@ func sd_solve(aux *sdaux_t, _s []byte) int {
 			a = int(_s[i] - '1')
 		}
 		if a >= 0 {
-			sd_update(aux, sr, sc, uint16(i*9+a), 1)
+			sd_update_forward(aux, sr, sc, uint16(i*9+a))
 			hints++
 		}
 		cr[i], cc[i], out[i] = -1, -1, _s[i]
@@ -128,7 +128,7 @@ func sd_solve(aux *sdaux_t, _s []byte) int {
 			}
 			c := cc[i]
 			if dir == -1 && cr[i] >= 0 {
-				sd_update(aux, sr, sc, aux.r[c][cr[i]], -1)
+				sd_update_revert(aux, sr, sc, aux.r[c][cr[i]])
 			}
 			r2_ := 9
 			for r2 := cr[i] + 1; r2 < 9; r2++ {
@@ -138,7 +138,7 @@ func sd_solve(aux *sdaux_t, _s []byte) int {
 				}
 			}
 			if r2_ < 9 {
-				cand = sd_update(aux, sr, sc, aux.r[c][r2_], 1)
+				cand = sd_update_forward(aux, sr, sc, aux.r[c][r2_])
 				cr[i], dir = int8(r2_), 1
 				i++
 			} else {
