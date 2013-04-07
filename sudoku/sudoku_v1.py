@@ -1,5 +1,10 @@
 import sys, string
 
+try:
+	xrange(1)
+except NameError:
+	xrange = range
+
 def sd_genmat():
 	r, C = 0, []
 	for i in xrange(9):
