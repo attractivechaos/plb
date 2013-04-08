@@ -86,9 +86,8 @@ func sd_solve(aux *sdaux_t, _s []byte) int {
 	cr := make([]int8, 81)
 	sc := make([]uint8, 324)
 	cc := make([]int16, 81)
-	out := make([]byte, 82)
+	out := make([]byte, 81)
 	n, hints := 0, 0
-	out[81] = 0
 	for c := 0; c < 324; c++ {
 		sc[c] = 9
 	}
@@ -151,8 +150,7 @@ func sd_solve(aux *sdaux_t, _s []byte) int {
 			r := aux.r[cc[j]][cr[j]]
 			out[r/9] = byte(r%9) + '1'
 		}
-		fmt.Println(out)
-		fmt.Println('\n')
+		fmt.Println(string(out))
 		n++
 		i--
 		dir = -1
@@ -170,7 +168,7 @@ func main() {
 		}
 		if len(l) > 81 {
 			sd_solve(a, l)
-			fmt.Println('\n')
+			fmt.Println("")
 		}
 	}
 }
