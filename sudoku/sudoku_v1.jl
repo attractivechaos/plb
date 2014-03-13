@@ -1,6 +1,6 @@
 function sd_genmat()
-	C = Array(Int,(729,4))
-	R = Array(Int,(324,9))
+	C = Array(Int16,(729,4))
+	R = Array(Int16,(324,9))
 	r = 1
 	for i = 0:8, j = 0:8, k = 0:8
 		C[r,1] = 9 * i + j + 1
@@ -9,7 +9,7 @@ function sd_genmat()
 		C[r,4] = 9 * j + k + 244
 		r += 1
 	end
-	nr = ones(Int,324)
+	nr = ones(Int16,324)
 	for r = 1:729, c = 1:4
 		k = C[r,c]
 		R[k,nr[k]] = r
@@ -58,12 +58,12 @@ function revert(R,C,sr,sc,r)
 end
 function sd_solve(R,C,_s)
 	hints = 0
-	out = ref(Int)
-	sr = zeros(Int,729)
-	sc = Array(Int,324)
+	out = ref(Int16)
+	sr = zeros(Int16,729)
+	sc = Array(Int16,324)
 	fill!(sc,9)
-	cr = zeros(Int,81)
-	cc = zeros(Int,81)
+	cr = zeros(Int16,81)
+	cc = zeros(Int16,81)
 	for i = 1:81
 		a = isdigit(_s[i]) ? _s[i]-'1' : -1
 		if a >= 0 
