@@ -31,7 +31,6 @@ impl Sudoku {
 		}
 		return s;
 	}
-	#[inline(always)]
 	fn forward(&self, sr: &mut [i8], sc: &mut [u8], c: uint, min: &mut u8, min_c: &mut u16) {
 		for &rr in self.r[c].iter() {
 			// Take a pointer to avoid repeated bounds checks
@@ -49,7 +48,6 @@ impl Sudoku {
 			}
 		}
 	}
-	#[inline(always)]
 	fn revert(&self, sr: &mut [i8], sc: &mut [u8], c: uint) {
 		for &rr in self.r[c].iter() {
 			// Take a pointer to avoid repeated bounds checks
@@ -62,7 +60,6 @@ impl Sudoku {
 			}
 		}
 	}
-	#[inline(always)]
 	fn update(&self, sr: &mut [i8], sc: &mut [u8], r: uint, v: int) -> int {
 		let mut min = 10;
 		let mut min_c = 0;
