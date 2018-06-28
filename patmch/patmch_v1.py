@@ -1,12 +1,17 @@
-import re, sys
+import re
+import sys
+import operator
+import itertools
 
-if (len(sys.argv) < 2):
+if len(sys.argv) != 1:
     sys.stderr.write("Usage: patmatch.py in.pattern < file.in\n")
     sys.exit(1)
 
-# the following is not correct. we have to trim off the tailing '\n'
+strip_newline = operator.itemgetter(slice(0,-1))
 
-r = re.compile(sys.argv[1])
-for line in sys.stdin:
-    if r.search(line[0:-1]):
-		sys.stdout.write(line)
+def match(regex, lines_with_cr):
+    search = re.compile(regex).search
+    return itertools.ifilter(search, itertools.imap(strip_newline, lines_with_cr))
+
+for line in match(sys.argv[1], sys.stdin):
+    print line
