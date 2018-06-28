@@ -7,6 +7,7 @@ fast_solv_9r2.c http://www.setbb.com/sudoku/viewtopic.php?t=1586   Ignacio Zelay
 fsss.cc         http://sites.google.com/site/dobrichev/fsss/       Mladen Dobrichev's solver (8.6)
 JSolve*         http://www.enjoysudoku.com/JSolve12.zip            Jason T. Linhart's solver (12)
 kudoku.c        ../sudoku_v1.c                                     Attractive Chaos' solver
+kudoku.js       https://attractivechaos.github.io/plb/kudoku.html  AC's solver ported to javascript
 sudocoo.c       http://www2.research.att.com/~gsf/                 Glenn Fowler's sudocoo
 sudoku-gh.js    http://hewgill.com/sudoku/                         Greg Hewgill's solver
 sudoku-pd.rb    https://gist.github.com/1013790                    Preetam D'Souza's Ruby solver
@@ -21,11 +22,11 @@ Data sets
 ---------
 
 Hard 20         https://github.com/attractivechaos/plb/blob/master/sudoku/sudoku.txt
-17-clue Sudoku  https://github.com/attractivechaos/plb/releases/download/v0/sudoku17.txt.gz
+Top 87          http://magictour.free.fr/topn87
+Top 1465        http://magictour.free.fr/top1465
 Top 50000       https://github.com/attractivechaos/plb/releases/download/v0/sudoku.top50k.gz
-topn87          http://magictour.free.fr/topn87
+17-clue         https://github.com/attractivechaos/plb/releases/download/v0/sudoku17.txt.gz
 Gen 500,000     http://www.enjoysudoku.com/gen_puzzles.zip (dead link)
-Top 1465        http://magictour.free.fr/top1465 (dead link)
 
 
 Results
