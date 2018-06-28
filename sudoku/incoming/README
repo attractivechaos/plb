@@ -20,10 +20,12 @@ zerodoku_v2.c   http://www.setbb.com/sudoku/viewtopic.php?t=1663   Jim Schirle's
 Data sets
 ---------
 
-Top 50000       http://www.sudokuvault.com/top50000.zip
-Top 1465        http://magictour.free.fr/top1465
-Sudoku 17       http://people.csse.uwa.edu.au/gordon/sudoku17
-Gen 500,000     http://www.enjoysudoku.com/gen_puzzles.zip
+Top 50000       https://github.com/attractivechaos/plb/releases/download/v0/sudoku.top50k.gz
+Sudoku 17       https://github.com/attractivechaos/plb/releases/download/v0/sudoku17.txt.gz
+Top 87          https://github.com/attractivechaos/plb/releases/download/v0/sudoku.top87.gz
+Hard 20         https://github.com/attractivechaos/plb/releases/download/v0/sudoku.hard20.gz
+Gen 500,000     http://www.enjoysudoku.com/gen_puzzles.zip (not available any more)
+Top 1465        http://magictour.free.fr/top1465 (not available any more)
 
 
 Results
