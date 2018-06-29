@@ -1,7 +1,7 @@
 my (%h, $max);
 
 while (<>) {
-    next if (++$h{$_} > $max);
+    next if (++$h{$_} <= $max);
     $max = $h{$_};
 }
 
