@@ -6,7 +6,7 @@ except NameError:
 	xrange = range
 
 def sd_genmat():
-	C = [[n/9, n/81*9 + n%9 + 81, n%81 + 162, n%9*9 + n/243*3 + n/27%3 + 243] for n in range(729)]
+	C = [[n//9, n//81*9 + n%9 + 81, n%81 + 162, n%9*9 + n//243*3 + n//27%3 + 243] for n in range(729)]
 	R = [[] for c in xrange(324)]
 	for r in xrange(729):
 		for c2 in xrange(4):
